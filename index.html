@@ -10,525 +10,220 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <style>
   :root {
-    --blue: #1A5FA8;
-    --blue-light: #E8F1FB;
-    --blue-mid: #3478C8;
-    --green: #1A9E6E;
-    --green-light: #E6F4EE;
-    --red-light: #FCEAEA;
-    --red: #B83030;
-    --amber-light: #FDF3E3;
-    --amber: #9A6200;
-    --bg: #F7F8FA;
-    --surface: #FFFFFF;
-    --border: #E2E6EC;
-    --border-soft: #EDF0F4;
-    --text: #1A1D23;
-    --text-2: #5A6072;
-    --text-3: #9AA0AE;
-    --radius: 10px;
-    --radius-sm: 6px;
+    --blue: #1A5FA8; --blue-light: #E8F1FB; --blue-mid: #3478C8;
+    --green: #1A9E6E; --green-light: #E6F4EE;
+    --red-light: #FCEAEA; --red: #B83030;
+    --amber-light: #FDF3E3; --amber: #9A6200;
+    --bg: #F7F8FA; --surface: #FFFFFF;
+    --border: #E2E6EC; --border-soft: #EDF0F4;
+    --text: #1A1D23; --text-2: #5A6072; --text-3: #9AA0AE;
+    --radius: 10px; --radius-sm: 6px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  input, select, textarea, button {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    outline: none;
-  }
-
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  input, select, textarea, button { font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; }
   input[type=text], input[type=number], input[type=date], input[type=tel], input[type=email], select, textarea {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 9px 12px;
-    background: var(--surface);
-    color: var(--text);
-    transition: border-color 0.15s;
+    width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 9px 12px; background: var(--surface); color: var(--text); transition: border-color 0.15s;
   }
-
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--blue-mid);
-    box-shadow: 0 0 0 3px rgba(52,120,200,0.12);
-  }
-
+  input:focus, select:focus, textarea:focus { border-color: var(--blue-mid); box-shadow: 0 0 0 3px rgba(52,120,200,0.12); }
   textarea { min-height: 72px; resize: vertical; line-height: 1.5; }
 
-  /* Layout */
-  .portal {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 0 0 3rem;
-  }
+  .portal { max-width: 640px; margin: 0 auto; padding: 0 0 3rem; }
 
-  /* Header */
   .header {
-    padding: 2rem 1.5rem 1.5rem;
-    border-bottom: 1px solid var(--border-soft);
-    margin-bottom: 0;
-    background: var(--surface);
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    padding: 1.25rem 1.5rem 1rem; border-bottom: 1px solid var(--border-soft);
+    background: var(--surface); position: sticky; top: 0; z-index: 10;
   }
-
-  .logo-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-  }
-
+  .logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; }
   .logo-mark {
-    width: 32px;
-    height: 32px;
-    background: var(--blue);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    width: 32px; height: 32px; background: var(--blue); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-
   .logo-mark i { color: white; font-size: 16px; }
-
-  .logo-text {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: 0.02em;
-  }
-
-  .logo-sub {
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 400;
-  }
-
-  /* Progress */
-  .progress-bar {
-    display: flex;
-    gap: 3px;
-  }
-
-  .progress-step {
-    flex: 1;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--border);
-    transition: background 0.3s ease;
-  }
-
+  .logo-text { font-size: 13px; font-weight: 600; color: var(--text); letter-spacing: 0.02em; }
+  .logo-sub { font-size: 11px; color: var(--text-3); font-weight: 400; }
+  .progress-bar { display: flex; gap: 3px; }
+  .progress-step { flex: 1; height: 3px; border-radius: 2px; background: var(--border); transition: background 0.3s; }
   .progress-step.done { background: var(--green); }
   .progress-step.active { background: var(--blue-mid); }
 
-  /* Step */
   .step { display: none; padding: 1.5rem; }
   .step.active { display: block; }
+  .step-header { margin-bottom: 1.5rem; }
+  .step-eyebrow { font-size: 11px; font-weight: 600; color: var(--blue-mid); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+  .step-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); margin-bottom: 4px; line-height: 1.2; }
+  .step-sub { font-size: 13px; color: var(--text-2); line-height: 1.5; }
 
-  .step-header {
-    margin-bottom: 1.5rem;
-  }
-
-  .step-eyebrow {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--blue-mid);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
-  .step-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--text);
-    margin-bottom: 4px;
-    line-height: 1.2;
-  }
-
-  .step-sub {
-    font-size: 13px;
-    color: var(--text-2);
-    line-height: 1.5;
-  }
-
-  /* Fields */
   .field { margin-bottom: 1rem; }
-
-  .field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-2);
-    margin-bottom: 5px;
-    letter-spacing: 0.01em;
-  }
-
+  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--text-2); margin-bottom: 5px; letter-spacing: 0.01em; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-  .row4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
 
-  /* Section label */
   .section-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-3);
-    margin: 1.5rem 0 0.75rem;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border-soft);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-3); margin: 1.5rem 0 0.75rem; padding-bottom: 8px; border-bottom: 1px solid var(--border-soft);
   }
+
+  /* TUSS autocomplete */
+  .tuss-wrap { position: relative; }
+  .tuss-dropdown {
+    position: absolute; top: 100%; left: 0; right: 0; background: var(--surface);
+    border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    z-index: 100; max-height: 200px; overflow-y: auto; display: none;
+  }
+  .tuss-option {
+    padding: 9px 12px; font-size: 13px; cursor: pointer; border-bottom: 1px solid var(--border-soft);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .tuss-option:hover { background: var(--blue-light); }
+  .tuss-option .tuss-code { font-size: 10px; font-weight: 700; color: var(--blue); letter-spacing: 0.04em; }
+  .tuss-option .tuss-name { color: var(--text); }
+  .tuss-selected {
+    background: var(--blue-light); border: 1px solid #C5D8F0; border-radius: var(--radius-sm);
+    padding: 7px 12px; font-size: 12px; color: var(--blue); margin-top: 5px;
+    display: none; align-items: center; gap: 6px;
+  }
+  .tuss-selected i { font-size: 14px; }
+
+  /* IMC */
+  .imc-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between;
+    margin-top: 0.5rem; margin-bottom: 1rem;
+  }
+  .imc-label { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .imc-value { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--text); }
+  .imc-class { font-size: 12px; margin-top: 2px; }
 
   /* Checkbox group */
   .checkbox-group { display: flex; flex-wrap: wrap; gap: 6px; }
-
   .cb-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--text);
-    padding: 6px 10px;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    transition: all 0.15s;
-    user-select: none;
-    background: var(--surface);
+    display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; color: var(--text);
+    padding: 6px 10px; border: 1px solid var(--border); border-radius: 20px;
+    transition: all 0.15s; user-select: none; background: var(--surface);
   }
-
   .cb-item:hover { border-color: var(--blue-mid); background: var(--blue-light); }
   .cb-item input { width: 14px; height: 14px; accent-color: var(--blue-mid); flex-shrink: 0; }
   .cb-item.checked { background: var(--blue-light); border-color: var(--blue-mid); color: var(--blue); font-weight: 500; }
 
-  /* Vitals cards */
-  .vitals-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
-  .vital-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px;
-    text-align: center;
+  /* Outros textarea inline */
+  .outros-wrap { display: none; margin-top: 8px; width: 100%; }
+  .outros-wrap textarea { min-height: 52px; font-size: 13px; border-radius: var(--radius-sm); }
+  .outros-wrap.visible { display: block; }
+
+  /* Alerta medicamentos */
+  .med-alert {
+    background: var(--amber-light); border: 1px solid #F0D9A0; border-radius: var(--radius);
+    padding: 1rem 1.25rem; margin-top: 1rem; display: none;
   }
-  .vital-card label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 6px; }
-  .vital-card input { border: none; text-align: center; font-size: 16px; font-weight: 500; color: var(--text); padding: 0; background: transparent; }
-  .vital-card input:focus { box-shadow: none; border: none; }
-
-  /* Score cards */
-  .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
-
-  .score-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem;
+  .med-alert .med-alert-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--amber); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
   }
-
-  .score-card .score-title { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-  .score-card .score-value { font-size: 28px; font-weight: 300; color: var(--text); font-family: 'DM Serif Display', serif; }
-  .score-card .score-label { font-size: 11px; color: var(--text-2); margin-top: 4px; }
-
-  /* Badges */
-  .badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 7px;
-    border-radius: 20px;
-    letter-spacing: 0.03em;
+  .med-alert-item {
+    display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #6B4200;
+    padding: 7px 0; border-bottom: 1px solid #F0D9A0; line-height: 1.5;
   }
-
-  .badge-low { background: var(--green-light); color: #1A6B48; }
-  .badge-mid { background: var(--amber-light); color: var(--amber); }
-  .badge-high { background: var(--red-light); color: var(--red); }
+  .med-alert-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .med-alert-item i { font-size: 16px; flex-shrink: 0; margin-top: 1px; color: var(--amber); }
 
   /* Upload zone */
   .upload-zone {
-    border: 1.5px dashed var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    text-align: center;
-    cursor: pointer;
-    margin-bottom: 0.75rem;
-    transition: all 0.15s;
-    background: var(--surface);
-    display: block;
+    border: 1.5px dashed var(--border); border-radius: var(--radius); padding: 1.5rem;
+    text-align: center; cursor: pointer; margin-bottom: 0.75rem; transition: all 0.15s;
+    background: var(--surface); display: block;
   }
-
   .upload-zone:hover { border-color: var(--blue-mid); background: var(--blue-light); }
   .upload-zone i { font-size: 28px; color: var(--text-3); display: block; margin-bottom: 8px; }
   .upload-zone p { font-size: 13px; color: var(--text-2); }
   .upload-zone .hint { font-size: 11px; color: var(--text-3); margin-top: 4px; }
   .upload-zone input[type=file] { display: none; }
-
-  .file-preview {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
-    background: var(--blue-light);
-    border-radius: var(--radius-sm);
-    margin-top: 6px;
-    font-size: 13px;
-    color: var(--blue);
-  }
+  .file-preview { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--blue-light); border-radius: var(--radius-sm); margin-top: 6px; font-size: 13px; color: var(--blue); }
 
   /* AI result */
-  .ai-result {
-    background: var(--blue-light);
-    border-radius: var(--radius);
-    padding: 1rem 1.25rem;
-    margin-top: 10px;
-    border: 1px solid #C5D8F0;
-  }
+  .ai-result { background: var(--blue-light); border-radius: var(--radius); padding: 1rem 1.25rem; margin-top: 10px; border: 1px solid #C5D8F0; }
+  .ai-result .ai-label { font-size: 10px; font-weight: 700; color: var(--blue); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .ai-result .ai-text { font-size: 13px; color: #1A3A6A; line-height: 1.6; }
 
-  .ai-result .ai-label {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--blue);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+  /* Score cards */
+  .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+  .score-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+  .score-card .score-title { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .score-card .score-value { font-size: 28px; font-weight: 300; color: var(--text); font-family: 'DM Serif Display', serif; }
+  .score-card .score-label { font-size: 11px; color: var(--text-2); margin-top: 4px; }
+  .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; letter-spacing: 0.03em; }
+  .badge-low { background: var(--green-light); color: #1A6B48; }
+  .badge-mid { background: var(--amber-light); color: var(--amber); }
+  .badge-high { background: var(--red-light); color: var(--red); }
 
-  .ai-result .ai-text {
-    font-size: 13px;
-    color: #1A3A6A;
-    line-height: 1.6;
+  /* Fragilidade com ícones */
+  .frag-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .frag-card {
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 8px;
+    cursor: pointer; text-align: center; transition: all 0.15s; background: var(--surface);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
   }
-
-  /* Info box */
-  .info-box {
-    background: var(--amber-light);
-    border: 1px solid #F0D9A0;
-    border-radius: var(--radius);
-    padding: 0.875rem 1rem;
-    font-size: 12px;
-    color: var(--amber);
-    line-height: 1.5;
-    margin-bottom: 1rem;
-    display: flex;
-    gap: 8px;
-    align-items: flex-start;
-  }
-
-  .info-box i { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .frag-card:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+  .frag-card.selected { border-color: var(--blue); background: var(--blue-light); }
+  .frag-card input { display: none; }
+  .frag-icon { font-size: 28px; line-height: 1; }
+  .frag-num { font-size: 10px; font-weight: 700; color: var(--blue); letter-spacing: 0.04em; }
+  .frag-desc { font-size: 11px; color: var(--text-2); line-height: 1.3; }
+  .frag-card.selected .frag-num, .frag-card.selected .frag-desc { color: var(--blue); }
 
   /* Consent box */
   .consent-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem;
-    max-height: 320px;
-    overflow-y: auto;
-    font-size: 12.5px;
-    color: var(--text-2);
-    line-height: 1.75;
-    margin-bottom: 1rem;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.25rem; max-height: 320px; overflow-y: auto; font-size: 12.5px;
+    color: var(--text-2); line-height: 1.75; margin-bottom: 1rem;
   }
-
-  .consent-box h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 15px;
-    color: var(--text);
-    margin-bottom: 1rem;
-    line-height: 1.3;
-  }
-
-  .consent-box h4 {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
-    margin: 1rem 0 0.35rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
+  .consent-box h3 { font-family: 'DM Serif Display', serif; font-size: 15px; color: var(--text); margin-bottom: 1rem; line-height: 1.3; }
+  .consent-box h4 { font-size: 12px; font-weight: 600; color: var(--text); margin: 1rem 0 0.35rem; text-transform: uppercase; letter-spacing: 0.04em; }
   .consent-box p { margin-bottom: 0.5rem; }
 
   /* Calendar */
-  .teleconsulta-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-  }
-
+  .teleconsulta-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin: 12px 0; }
-
-  .cal-day {
-    text-align: center;
-    font-size: 11px;
-    padding: 7px 2px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-  }
-
+  .cal-day { text-align: center; font-size: 11px; padding: 7px 2px; border-radius: var(--radius-sm); cursor: pointer; }
   .cal-day.header { color: var(--text-3); font-weight: 600; cursor: default; }
   .cal-day.available { color: var(--text); border: 1px solid var(--border); }
   .cal-day.available:hover { background: var(--blue-light); border-color: var(--blue-mid); color: var(--blue); }
   .cal-day.selected { background: var(--blue); color: white; border: none; font-weight: 500; }
   .cal-day.disabled { color: var(--border); cursor: default; }
-
   .time-slots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-  .time-slot {
-    padding: 7px 14px;
-    font-size: 13px;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    cursor: pointer;
-    color: var(--text);
-    background: var(--surface);
-    transition: all 0.15s;
-  }
-
+  .time-slot { padding: 7px 14px; font-size: 13px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; color: var(--text); background: var(--surface); transition: all 0.15s; }
   .time-slot:hover { border-color: var(--blue-mid); color: var(--blue); background: var(--blue-light); }
   .time-slot.selected { background: var(--blue); color: white; border-color: var(--blue); }
 
   /* Nav */
-  .nav-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 2rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--border-soft);
-  }
-
-  .btn-next {
-    flex: 1;
-    padding: 13px;
-    background: var(--blue);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
+  .nav-row { display: flex; gap: 10px; margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border-soft); }
+  .btn-next { flex: 1; padding: 13px; background: var(--blue); color: white; border: none; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .btn-next:hover { background: #124A8A; }
-
-  .btn-back {
-    padding: 13px 18px;
-    background: transparent;
-    color: var(--text-2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
+  .btn-back { padding: 13px 18px; background: transparent; color: var(--text-2); border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; cursor: pointer; transition: all 0.15s; }
   .btn-back:hover { background: var(--bg); }
 
-  /* Spinner */
-  .spinner {
-    width: 20px;
-    height: 20px;
-    border: 2px solid rgba(52,120,200,0.2);
-    border-top-color: var(--blue-mid);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: inline-block;
-  }
-
+  .spinner { width: 20px; height: 20px; border: 2px solid rgba(52,120,200,0.2); border-top-color: var(--blue-mid); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Success */
   .success-screen { text-align: center; padding: 2rem 0; }
-  .success-icon {
-    width: 60px;
-    height: 60px;
-    background: var(--green-light);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.25rem;
-  }
+  .success-icon { width: 60px; height: 60px; background: var(--green-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
   .success-icon i { font-size: 28px; color: var(--green); }
 
-  /* Mallampati placeholder */
-  .mallampati-note {
-    background: var(--blue-light);
-    border: 1px dashed var(--blue-mid);
-    border-radius: var(--radius);
-    padding: 1rem 1.25rem;
-    font-size: 12.5px;
-    color: var(--blue);
-    line-height: 1.6;
-    margin-bottom: 1rem;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-  }
-
-  .mallampati-note i { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
-
-  /* Dor scale */
-  .dor-scale {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-  }
-
-  .dor-btn {
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--text-2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .dor-btn:hover { border-color: var(--blue-mid); color: var(--blue); }
-  .dor-btn.selected { background: var(--blue); color: white; border-color: var(--blue); }
-  .dor-btn.dor-mid { border-color: #F0D9A0; }
-  .dor-btn.selected.dor-mid { background: var(--amber); border-color: var(--amber); }
-  .dor-btn.dor-high { border-color: #F0C0C0; }
-  .dor-btn.selected.dor-high { background: var(--red); border-color: var(--red); }
-
-  /* Referência sinais vitais */
-  .ref-note { font-size: 10px; color: var(--text-3); margin-top: 4px; }
+  .info-box { background: var(--amber-light); border: 1px solid #F0D9A0; border-radius: var(--radius); padding: 0.875rem 1rem; font-size: 12px; color: var(--amber); line-height: 1.5; margin-bottom: 1rem; display: flex; gap: 8px; align-items: flex-start; }
+  .info-box i { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
 
   @media (max-width: 480px) {
-    .vitals-grid { grid-template-columns: repeat(2, 1fr); }
     .score-grid { grid-template-columns: 1fr 1fr; }
-    .row4 { grid-template-columns: 1fr 1fr; }
+    .frag-grid { grid-template-columns: repeat(3, 1fr); }
+    .row3 { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
 <body>
-
 <div class="portal">
-  <!-- Header fixo -->
+
+  <!-- HEADER -->
   <div class="header">
     <div class="logo-row">
       <div class="logo-mark"><i class="ti ti-stethoscope"></i></div>
@@ -549,9 +244,7 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════
-       ETAPA 1 — Identificação
-  ═══════════════════════════════════════════ -->
+  <!-- ═══ ETAPA 1 — Identificação ═══ -->
   <div class="step active" id="step0">
     <div class="step-header">
       <div class="step-eyebrow">Etapa 1 de 8</div>
@@ -574,34 +267,37 @@
 
     <div class="row">
       <div class="field"><label>CPF</label><input type="text" id="cpf" placeholder="000.000.000-00"></div>
-      <div class="field"><label>Prontuário</label><input type="text" id="prontuario" placeholder="Número do prontuário"></div>
-    </div>
-
-    <div class="row">
       <div class="field"><label>Telefone / WhatsApp</label><input type="tel" id="telefone" placeholder="(22) 99999-9999"></div>
-      <div class="field"><label>E-mail</label><input type="email" id="email" placeholder="seu@email.com"></div>
     </div>
 
-    <div class="row">
-      <div class="field"><label>Operadora de saúde</label>
-        <select id="operadora">
-          <option value="">Selecione</option>
-          <option value="sus">SUS</option>
-          <option value="bradesco">Bradesco Saúde</option>
-          <option value="unimed">Unimed</option>
-          <option value="amil">Amil</option>
-          <option value="sulamerica">SulAmérica</option>
-          <option value="notredame">NotreDame Intermédica</option>
-          <option value="hapvida">Hapvida</option>
-          <option value="particular">Particular</option>
-          <option value="outro">Outro</option>
-        </select>
+    <div class="field"><label>E-mail</label><input type="email" id="email" placeholder="seu@email.com"></div>
+
+    <div class="field"><label>Operadora de saúde</label>
+      <select id="operadora">
+        <option value="">Selecione</option>
+        <option value="sus">SUS</option>
+        <option value="bradesco">Bradesco Saúde</option>
+        <option value="unimed">Unimed</option>
+        <option value="amil">Amil</option>
+        <option value="sulamerica">SulAmérica</option>
+        <option value="notredame">NotreDame Intermédica</option>
+        <option value="hapvida">Hapvida</option>
+        <option value="particular">Particular</option>
+        <option value="outro">Outro</option>
+      </select>
+    </div>
+
+    <!-- Cirurgia com TUSS -->
+    <div class="field">
+      <label>Cirurgia / procedimento agendado</label>
+      <div class="tuss-wrap">
+        <input type="text" id="cirurgiaInput" placeholder="Digite o nome do procedimento..." autocomplete="off" oninput="searchTuss(this.value)">
+        <div class="tuss-dropdown" id="tussDropdown"></div>
       </div>
-      <div class="field"><label>Leito / Quarto</label><input type="text" id="leito" placeholder="ex: 204A"></div>
-    </div>
-
-    <div class="field"><label>Cirurgia / procedimento agendado</label>
-      <input type="text" id="cirurgia" placeholder="ex: colecistectomia laparoscópica">
+      <div class="tuss-selected" id="tussSelected">
+        <i class="ti ti-check"></i>
+        <span id="tussSelectedText"></span>
+      </div>
     </div>
 
     <div class="field"><label>Diagnóstico</label>
@@ -613,65 +309,26 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════
-       ETAPA 2 — Sinais vitais e jejum
-  ═══════════════════════════════════════════ -->
+  <!-- ═══ ETAPA 2 — Dados antropométricos + IMC ═══ -->
   <div class="step" id="step1">
     <div class="step-header">
       <div class="step-eyebrow">Etapa 2 de 8</div>
-      <div class="step-title">Sinais vitais e jejum</div>
-      <div class="step-sub">Preencha com os valores da sua última aferição.</div>
+      <div class="step-title">Dados antropométricos</div>
+      <div class="step-sub">Peso e altura para cálculo do IMC.</div>
     </div>
 
-    <div class="section-label">Dados antropométricos</div>
     <div class="row">
-      <div class="field"><label>Peso (kg)</label><input type="number" id="peso" placeholder="ex: 75"></div>
-      <div class="field"><label>Altura (cm)</label><input type="number" id="altura" placeholder="ex: 170"></div>
+      <div class="field"><label>Peso (kg)</label><input type="number" id="peso" placeholder="ex: 75" oninput="calcIMC()"></div>
+      <div class="field"><label>Altura (cm)</label><input type="number" id="altura" placeholder="ex: 170" oninput="calcIMC()"></div>
     </div>
 
-    <div class="section-label">Sinais vitais</div>
-    <div class="vitals-grid">
-      <div class="vital-card">
-        <label>PA (mmHg)</label>
-        <input type="text" id="pa" placeholder="120/80">
+    <div class="imc-card" id="imcCard" style="display:none;">
+      <div>
+        <div class="imc-label">IMC calculado</div>
+        <div class="imc-value" id="imcValue">—</div>
+        <div class="imc-class" id="imcClass"></div>
       </div>
-      <div class="vital-card">
-        <label>FC (bpm)</label>
-        <input type="number" id="fc" placeholder="72">
-      </div>
-      <div class="vital-card">
-        <label>Temp (°C)</label>
-        <input type="number" step="0.1" id="temp" placeholder="36.5">
-      </div>
-      <div class="vital-card">
-        <label>FR (irpm)</label>
-        <input type="number" id="fr" placeholder="16">
-      </div>
-    </div>
-
-    <div class="section-label">Jejum</div>
-    <div class="row">
-      <div class="field"><label>Jejum sólidos (horas)</label><input type="number" id="jejumSol" placeholder="ex: 8"></div>
-      <div class="field"><label>Jejum líquidos (horas)</label><input type="number" id="jejumLiq" placeholder="ex: 2"></div>
-    </div>
-
-    <div class="section-label">Nível de dor atual</div>
-    <div class="field">
-      <label>Escala numérica de dor (0–10)</label>
-      <div class="dor-scale" id="dorScale">
-        <button class="dor-btn" onclick="selDor(0)">0</button>
-        <button class="dor-btn" onclick="selDor(1)">1</button>
-        <button class="dor-btn" onclick="selDor(2)">2</button>
-        <button class="dor-btn" onclick="selDor(3)">3</button>
-        <button class="dor-btn dor-mid" onclick="selDor(4)">4</button>
-        <button class="dor-btn dor-mid" onclick="selDor(5)">5</button>
-        <button class="dor-btn dor-mid" onclick="selDor(6)">6</button>
-        <button class="dor-btn dor-high" onclick="selDor(7)">7</button>
-        <button class="dor-btn dor-high" onclick="selDor(8)">8</button>
-        <button class="dor-btn dor-high" onclick="selDor(9)">9</button>
-        <button class="dor-btn dor-high" onclick="selDor(10)">10</button>
-      </div>
-      <div class="ref-note">0 = sem dor · 10 = pior dor imaginável</div>
+      <div id="imcIcon" style="font-size: 48px;"></div>
     </div>
 
     <div class="nav-row">
@@ -680,9 +337,7 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════
-       ETAPA 3 — Histórico clínico
-  ═══════════════════════════════════════════ -->
+  <!-- ═══ ETAPA 3 — Histórico clínico ═══ -->
   <div class="step" id="step2">
     <div class="step-header">
       <div class="step-eyebrow">Etapa 3 de 8</div>
@@ -702,7 +357,9 @@
       <label class="cb-item"><input type="checkbox" value="angioplastia" onchange="updateCb(this)"> Angioplastia</label>
       <label class="cb-item"><input type="checkbox" value="aaa" onchange="updateCb(this)"> Aneurisma aórtico</label>
       <label class="cb-item"><input type="checkbox" value="ivp" onchange="updateCb(this)"> Insuf. venosa perif.</label>
+      <label class="cb-item" id="cbCardioOutros"><input type="checkbox" value="cardioOutros" onchange="updateCb(this); toggleOutros('cardioOutrosWrap', this)"> Outro</label>
     </div>
+    <div class="outros-wrap" id="cardioOutrosWrap"><textarea placeholder="Descreva outras condições cardio-circulatórias..." id="cardioOutrosText"></textarea></div>
 
     <div class="section-label">Respiratório</div>
     <div class="checkbox-group">
@@ -710,10 +367,12 @@
       <label class="cb-item"><input type="checkbox" value="dpoc" onchange="updateCb(this)"> DPOC</label>
       <label class="cb-item"><input type="checkbox" value="apneia" onchange="updateCb(this)"> Apneia do sono</label>
       <label class="cb-item"><input type="checkbox" value="o2dep" onchange="updateCb(this)"> Dependência de O₂</label>
-      <label class="cb-item"><input type="checkbox" value="ivas" onchange="updateCb(this)"> IVAS recente</label>
+      <label class="cb-item"><input type="checkbox" value="grippe" onchange="updateCb(this)"> Gripe ou Resfriado</label>
       <label class="cb-item"><input type="checkbox" value="tb" onchange="updateCb(this)"> Tuberculose</label>
       <label class="cb-item"><input type="checkbox" value="expec" onchange="updateCb(this)"> Expectoração</label>
+      <label class="cb-item"><input type="checkbox" value="respOutros" onchange="updateCb(this); toggleOutros('respOutrosWrap', this)"> Outro</label>
     </div>
+    <div class="outros-wrap" id="respOutrosWrap"><textarea placeholder="Descreva outras condições respiratórias..." id="respOutrosText"></textarea></div>
 
     <div class="section-label">Neurológico</div>
     <div class="checkbox-group">
@@ -723,7 +382,9 @@
       <label class="cb-item"><input type="checkbox" value="lesaoMed" onchange="updateCb(this)"> Lesão medular</label>
       <label class="cb-item"><input type="checkbox" value="cefaleia" onchange="updateCb(this)"> Cefaleia crônica</label>
       <label class="cb-item"><input type="checkbox" value="dormencia" onchange="updateCb(this)"> Dormência / fraqueza</label>
+      <label class="cb-item"><input type="checkbox" value="neuroOutros" onchange="updateCb(this); toggleOutros('neuroOutrosWrap', this)"> Outro</label>
     </div>
+    <div class="outros-wrap" id="neuroOutrosWrap"><textarea placeholder="Descreva outras condições neurológicas..." id="neuroOutrosText"></textarea></div>
 
     <div class="section-label">Gastrointestinal / hepático</div>
     <div class="checkbox-group">
@@ -734,14 +395,18 @@
       <label class="cb-item"><input type="checkbox" value="hernia" onchange="updateCb(this)"> Hérnia de hiato</label>
       <label class="cb-item"><input type="checkbox" value="icteric" onchange="updateCb(this)"> Icterícia</label>
       <label class="cb-item"><input type="checkbox" value="obstint" onchange="updateCb(this)"> Obstrução intestinal</label>
+      <label class="cb-item"><input type="checkbox" value="giOutros" onchange="updateCb(this); toggleOutros('giOutrosWrap', this)"> Outro</label>
     </div>
+    <div class="outros-wrap" id="giOutrosWrap"><textarea placeholder="Descreva outras condições gastrointestinais..." id="giOutrosText"></textarea></div>
 
     <div class="section-label">Renal</div>
     <div class="checkbox-group">
       <label class="cb-item"><input type="checkbox" value="drc" onchange="updateCb(this)"> Doença renal crônica</label>
       <label class="cb-item"><input type="checkbox" value="dialise" onchange="updateCb(this)"> Diálise</label>
       <label class="cb-item"><input type="checkbox" value="iraguda" onchange="updateCb(this)"> Insuf. renal aguda</label>
+      <label class="cb-item"><input type="checkbox" value="renalOutros" onchange="updateCb(this); toggleOutros('renalOutrosWrap', this)"> Outro</label>
     </div>
+    <div class="outros-wrap" id="renalOutrosWrap"><textarea placeholder="Descreva outras condições renais..." id="renalOutrosText"></textarea></div>
 
     <div class="section-label">Endócrino / Hematológico</div>
     <div class="checkbox-group">
@@ -752,28 +417,35 @@
       <label class="cb-item"><input type="checkbox" value="plaquetopatia" onchange="updateCb(this)"> Plaquetopatia</label>
       <label class="cb-item"><input type="checkbox" value="transfusao" onchange="updateCb(this)"> Transfusão prévia</label>
       <label class="cb-item"><input type="checkbox" value="cancer" onchange="updateCb(this)"> Câncer</label>
+      <label class="cb-item"><input type="checkbox" value="endoOutros" onchange="updateCb(this); toggleOutros('endoOutrosWrap', this)"> Outro</label>
     </div>
+    <div class="outros-wrap" id="endoOutrosWrap"><textarea placeholder="Descreva outras condições endócrinas/hematológicas..." id="endoOutrosText"></textarea></div>
 
     <div class="section-label">Músculo-esquelético</div>
     <div class="checkbox-group">
       <label class="cb-item"><input type="checkbox" value="dorLombar" onchange="updateCb(this)"> Dor lombar</label>
       <label class="cb-item"><input type="checkbox" value="artrite" onchange="updateCb(this)"> Artrite</label>
       <label class="cb-item"><input type="checkbox" value="muscodist" onchange="updateCb(this)"> Musculodistrofia</label>
+      <label class="cb-item"><input type="checkbox" value="muscoOutros" onchange="updateCb(this); toggleOutros('muscoOutrosWrap', this)"> Outro</label>
     </div>
+    <div class="outros-wrap" id="muscoOutrosWrap"><textarea placeholder="Descreva outras condições músculo-esqueléticas..." id="muscoOutrosText"></textarea></div>
 
     <div class="section-label">Infeccioso</div>
     <div class="checkbox-group">
       <label class="cb-item"><input type="checkbox" value="hiv" onchange="updateCb(this)"> HIV</label>
+      <label class="cb-item"><input type="checkbox" value="infecOutros" onchange="updateCb(this); toggleOutros('infecOutrosWrap', this)"> Outro</label>
     </div>
+    <div class="outros-wrap" id="infecOutrosWrap"><textarea placeholder="Descreva outras condições infecciosas..." id="infecOutrosText"></textarea></div>
 
     <div class="section-label">Hábitos sociais</div>
     <div class="checkbox-group">
       <label class="cb-item"><input type="checkbox" value="tabaco" onchange="updateCb(this)"> Tabagismo</label>
       <label class="cb-item"><input type="checkbox" value="alcool" onchange="updateCb(this)"> Álcool</label>
-      <label class="cb-item"><input type="checkbox" value="drogas" onchange="updateCb(this)"> Outras drogas</label>
+      <label class="cb-item"><input type="checkbox" value="drogas" onchange="updateCb(this); toggleOutros('drogasOutrosWrap', this)"> Outras drogas</label>
     </div>
+    <div class="outros-wrap" id="drogasOutrosWrap"><textarea placeholder="Descreva as substâncias..." id="drogasOutrosText"></textarea></div>
 
-    <div class="section-label">Gravidez / Pediatria</div>
+    <div class="section-label">Gravidez</div>
     <div class="row">
       <div class="field"><label>Gravidez</label>
         <select id="gravidez">
@@ -781,7 +453,7 @@
           <option value="sim">Sim</option>
         </select>
       </div>
-      <div class="field"><label>Idade gestacional (se sim)</label>
+      <div class="field"><label>Idade gestacional (semanas)</label>
         <input type="number" id="idadeGest" placeholder="semanas">
       </div>
     </div>
@@ -793,22 +465,23 @@
     <div class="field"><label>Cirurgias / anestesias prévias e intercorrências</label>
       <textarea id="cirurgiaPrevia" placeholder="ex: apendicectomia 2015, sem intercorrências"></textarea>
     </div>
-    <div class="field"><label>Medicamentos em uso</label>
-      <textarea id="medicamentos" placeholder="Nome, dose e frequência de cada um"></textarea>
+
+    <!-- Medicamentos com alerta de suspensão -->
+    <div class="field">
+      <label>Medicamentos em uso</label>
+      <textarea id="medicamentos" placeholder="Liste os medicamentos, doses e frequência. Ex: AAS 100mg 1x/dia" oninput="checkMedAlerts(this.value)"></textarea>
+    </div>
+    <div class="med-alert" id="medAlert">
+      <div class="med-alert-title"><i class="ti ti-alert-triangle"></i> Atenção — Suspensão pré-operatória necessária</div>
+      <div id="medAlertItems"></div>
     </div>
 
     <div class="row">
       <div class="field"><label>Histórico familiar de problemas com anestesia</label>
-        <select id="histFam">
-          <option value="nao">Não</option>
-          <option value="sim">Sim</option>
-        </select>
+        <select id="histFam"><option value="nao">Não</option><option value="sim">Sim</option></select>
       </div>
       <div class="field"><label>Intercorrência anestésico-cirúrgica prévia</label>
-        <select id="intercorrencia">
-          <option value="nao">Não</option>
-          <option value="sim">Sim</option>
-        </select>
+        <select id="intercorrencia"><option value="nao">Não</option><option value="sim">Sim</option></select>
       </div>
     </div>
 
@@ -818,19 +491,18 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════
-       ETAPA 4 — Exames
-  ═══════════════════════════════════════════ -->
+  <!-- ═══ ETAPA 4 — Exames complementares ═══ -->
   <div class="step" id="step3">
     <div class="step-header">
       <div class="step-eyebrow">Etapa 4 de 8</div>
       <div class="step-title">Exames complementares</div>
-      <div class="step-sub">Envie fotos ou PDFs dos seus exames. A IA extrai os valores para revisão médica.</div>
+      <div class="step-sub">Envie fotos ou PDFs dos seus exames para análise prévia.</div>
     </div>
 
+    <!-- Laboratorial -->
     <label class="upload-zone" onclick="document.getElementById('labFile').click()">
       <i class="ti ti-flask"></i>
-      <p>Toque para enviar exames laboratoriais</p>
+      <p>Exames laboratoriais</p>
       <div class="hint">Hemograma, bioquímica, coagulação...</div>
       <input type="file" id="labFile" accept="image/*,.pdf" multiple onchange="handleUpload('labFile','labPreview','labAI','labAIText','lab')">
     </label>
@@ -857,6 +529,7 @@
       <div class="field"><label>INR</label><input type="number" step="0.1" placeholder="1.0" id="inr"></div>
     </div>
 
+    <!-- ECG -->
     <div class="section-label">Eletrocardiograma</div>
     <label class="upload-zone" onclick="document.getElementById('ecgFile').click()">
       <i class="ti ti-activity"></i>
@@ -870,15 +543,23 @@
       <div class="ai-text" id="ecgAIText"></div>
     </div>
 
+    <!-- Outros exames -->
+    <div class="section-label">Outros exames</div>
+    <label class="upload-zone" onclick="document.getElementById('outrosFile').click()">
+      <i class="ti ti-paperclip"></i>
+      <p>Envie outros exames ou documentos</p>
+      <div class="hint">Ecocardiograma, espirometria, imagens, laudos...</div>
+      <input type="file" id="outrosFile" accept="image/*,.pdf" multiple onchange="handleUploadSimples('outrosFile','outrosPreview')">
+    </label>
+    <div id="outrosPreview"></div>
+
     <div class="nav-row">
       <button class="btn-back" onclick="goTo(2)"><i class="ti ti-arrow-left"></i></button>
       <button class="btn-next" onclick="goTo(4)">Continuar <i class="ti ti-arrow-right"></i></button>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════
-       ETAPA 5 — Escores de risco e via aérea
-  ═══════════════════════════════════════════ -->
+  <!-- ═══ ETAPA 5 — Escores e via aérea ═══ -->
   <div class="step" id="step4">
     <div class="step-header">
       <div class="step-eyebrow">Etapa 5 de 8</div>
@@ -889,66 +570,88 @@
     <div id="scoreContent"></div>
 
     <div class="section-label">Via aérea</div>
-
-    <div class="mallampati-note">
-      <i class="ti ti-camera"></i>
-      <div>
-        <strong>Classificação Mallampati por foto</strong> — disponível em breve.<br>
-        <span style="font-size: 11px; opacity: 0.8;">O paciente poderá tirar uma foto da boca aberta e a IA fará uma triagem preliminar, sujeita à confirmação do anestesiologista.</span>
-      </div>
-    </div>
-
     <div class="row">
-      <div class="field"><label>Mallampati (preenchimento médico)</label>
-        <select id="mallampati">
-          <option value="">A avaliar</option>
-          <option value="1">Classe I</option>
-          <option value="2">Classe II</option>
-          <option value="3">Classe III</option>
-          <option value="4">Classe IV</option>
-        </select>
-      </div>
       <div class="field"><label>Distância esterno-mento (cm)</label>
         <input type="number" step="0.5" placeholder="ex: 6.5" id="distMento">
       </div>
-    </div>
-
-    <div class="row">
       <div class="field"><label>Via aérea difícil prévia</label>
         <select id="vaDificil">
           <option value="nao">Não</option>
           <option value="sim">Sim</option>
         </select>
       </div>
-      <div class="field"><label>Dentição / Prognatismo</label>
-        <input type="text" id="denticao" placeholder="observações">
-      </div>
+    </div>
+    <div class="field"><label>Dentição / Prognatismo</label>
+      <input type="text" id="denticao" placeholder="Observações (preenchido pelo médico)">
     </div>
 
+    <!-- Escala de Fragilidade com ícones -->
     <div class="section-label">Escala de fragilidade clínica</div>
-    <div class="checkbox-group" id="fragGroup">
-      <label class="cb-item"><input type="radio" name="frag" value="1" onchange="selFrag(this)"> 1 — Muito ativo</label>
-      <label class="cb-item"><input type="radio" name="frag" value="2" onchange="selFrag(this)"> 2 — Bem</label>
-      <label class="cb-item"><input type="radio" name="frag" value="3" onchange="selFrag(this)"> 3 — Controlando bem</label>
-      <label class="cb-item"><input type="radio" name="frag" value="4" onchange="selFrag(this)"> 4 — Vulnerável</label>
-      <label class="cb-item"><input type="radio" name="frag" value="5" onchange="selFrag(this)"> 5 — Levemente frágil</label>
-      <label class="cb-item"><input type="radio" name="frag" value="6" onchange="selFrag(this)"> 6 — Moderadamente frágil</label>
-      <label class="cb-item"><input type="radio" name="frag" value="7" onchange="selFrag(this)"> 7 — Gravemente frágil</label>
-      <label class="cb-item"><input type="radio" name="frag" value="8" onchange="selFrag(this)"> 8 — Muito gravemente frágil</label>
-      <label class="cb-item"><input type="radio" name="frag" value="9" onchange="selFrag(this)"> 9 — Paliativo</label>
-    </div>
+    <div class="frag-grid" id="fragGroup">
 
-    <div class="section-label">Hemorragia / Hemoterapia</div>
-    <div class="row">
-      <div class="field"><label>Tipagem sanguínea solicitada</label>
-        <select id="tipagem">
-          <option value="nao">Não</option>
-          <option value="sim">Sim</option>
-        </select>
-      </div>
-      <div class="field"><label>Reserva de concentrado de hemácias</label>
-        <input type="number" id="reservaHem" placeholder="nº de unidades">
-      </div>
+      <label class="frag-card" onclick="selFrag(this, 1)">
+        <input type="radio" name="frag" value="1">
+        <div class="frag-icon">🏃</div>
+        <div class="frag-num">1</div>
+        <div class="frag-desc">Muito ativo</div>
+      </label>
+
+      <label class="frag-card" onclick="selFrag(this, 2)">
+        <input type="radio" name="frag" value="2">
+        <div class="frag-icon">🚶</div>
+        <div class="frag-num">2</div>
+        <div class="frag-desc">Bem</div>
+      </label>
+
+      <label class="frag-card" onclick="selFrag(this, 3)">
+        <input type="radio" name="frag" value="3">
+        <div class="frag-icon">🧍</div>
+        <div class="frag-num">3</div>
+        <div class="frag-desc">Controlando bem</div>
+      </label>
+
+      <label class="frag-card" onclick="selFrag(this, 4)">
+        <input type="radio" name="frag" value="4">
+        <div class="frag-icon">🪑</div>
+        <div class="frag-num">4</div>
+        <div class="frag-desc">Vulnerável</div>
+      </label>
+
+      <label class="frag-card" onclick="selFrag(this, 5)">
+        <input type="radio" name="frag" value="5">
+        <div class="frag-icon">🦯</div>
+        <div class="frag-num">5</div>
+        <div class="frag-desc">Levemente frágil</div>
+      </label>
+
+      <label class="frag-card" onclick="selFrag(this, 6)">
+        <input type="radio" name="frag" value="6">
+        <div class="frag-icon">🦽</div>
+        <div class="frag-num">6</div>
+        <div class="frag-desc">Moderadamente frágil</div>
+      </label>
+
+      <label class="frag-card" onclick="selFrag(this, 7)">
+        <input type="radio" name="frag" value="7">
+        <div class="frag-icon">🛏️</div>
+        <div class="frag-num">7</div>
+        <div class="frag-desc">Gravemente frágil</div>
+      </label>
+
+      <label class="frag-card" onclick="selFrag(this, 8)">
+        <input type="radio" name="frag" value="8">
+        <div class="frag-icon">💊</div>
+        <div class="frag-num">8</div>
+        <div class="frag-desc">Muito gravemente frágil</div>
+      </label>
+
+      <label class="frag-card" onclick="selFrag(this, 9)">
+        <input type="radio" name="frag" value="9">
+        <div class="frag-icon">🕊️</div>
+        <div class="frag-num">9</div>
+        <div class="frag-desc">Paliativo</div>
+      </label>
+
     </div>
 
     <div class="nav-row">
@@ -957,9 +660,7 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════
-       ETAPA 6 — Termo de consentimento
-  ═══════════════════════════════════════════ -->
+  <!-- ═══ ETAPA 6 — Termo de consentimento ═══ -->
   <div class="step" id="step5">
     <div class="step-header">
       <div class="step-eyebrow">Etapa 6 de 8</div>
@@ -969,54 +670,37 @@
 
     <div class="consent-box">
       <h3>Termo de Consentimento Livre e Esclarecido para Anestesia, Sedação ou Acompanhamento do Serviço de Anestesia</h3>
-
       <h4>1. O que é?</h4>
-      <p>A anestesia consiste na alteração de algumas funções de nosso organismo por diversos medicamentos, cada um com uma propriedade diferente. O objetivo é permitir a realização de procedimentos cirúrgicos, invasivos ou diagnósticos, reduzindo ou eliminando a dor e outras respostas indesejadas do organismo durante o procedimento. Ela compreende pelo menos dois dos itens abaixo: redução ou perda de consciência (hipnose); redução ou eliminação da dor (analgesia); redução ou abolição dos movimentos (bloqueio muscular); controle das respostas involuntárias do organismo frente ao estresse da cirurgia como aumento da frequência cardíaca, aumento da pressão arterial, sudorese, etc. (bloqueio neurovegetativo).</p>
-
+      <p>A anestesia consiste na alteração de algumas funções de nosso organismo por diversos medicamentos. O objetivo é permitir a realização de procedimentos cirúrgicos, invasivos ou diagnósticos, reduzindo ou eliminando a dor e outras respostas indesejadas. Compreende ao menos dois dos itens: redução ou perda de consciência (hipnose); redução ou eliminação da dor (analgesia); redução ou abolição dos movimentos (bloqueio muscular); controle das respostas involuntárias frente ao estresse da cirurgia (bloqueio neurovegetativo).</p>
       <h4>2. Como é feito?</h4>
-      <p>O procedimento anestésico é realizado por um médico anestesiologista ou devidamente habilitado na prática de anestesia e sedação. Este médico permanece junto ao paciente, que fica monitorizado durante todo o procedimento. De maneira obrigatória, todo paciente é monitorizado quanto aos seguintes sinais vitais: frequência cardíaca, pulso, oxigenação sanguínea, pressão arterial e respiração (no caso de anestesia geral).</p>
-
+      <p>O procedimento anestésico é realizado por um médico anestesiologista devidamente habilitado, que permanece junto ao paciente durante todo o procedimento. São monitorados obrigatoriamente: frequência cardíaca, pulso, oxigenação sanguínea, pressão arterial e respiração.</p>
       <h4>3. Técnicas anestésicas</h4>
-      <p><strong>a. Acompanhamento do Serviço de Anestesia:</strong> anestesiologista fica responsável por acompanhar e/ou supervisionar o deslocamento e/ou procedimento.</p>
-      <p><strong>b. Sedação:</strong> pode variar de leve (paciente consciente, porém não ansioso) até profunda (paciente em sono profundo, só despertado por estímulos dolorosos).</p>
-      <p><strong>c. Anestesia geral:</strong> estado de perda de consciência em que o paciente não é desperto mesmo que sofra algum estímulo doloroso. Pode ser administrada por via venosa, venosa e inalatória ou apenas inalatória.</p>
-      <p><strong>d. Bloqueios espinhais:</strong> raquianestesia, anestesia peridural e duplo bloqueio. Realizados através da injeção de anestésico local na região onde estão as terminações nervosas da coluna espinhal.</p>
-      <p><strong>e. Bloqueios tronculares:</strong> injeção de anestésico local em volta de nervos específicos com o objetivo de anestesiar um segmento determinado do corpo.</p>
-      <p><strong>f. Outros procedimentos:</strong> eventualmente necessários para a realização da anestesia e sua monitorização: inserção de cateter venoso central, punção arterial, sondagem gástrica, entre outros.</p>
-
-      <h4>4. Indicações</h4>
-      <p>A anestesia pode ser realizada em qualquer procedimento cirúrgico, invasivo ou diagnóstico em que haja dor ou incômodo para o paciente, desde que os benefícios superem os riscos.</p>
-
-      <h4>5. Benefícios</h4>
-      <p>A maioria dos procedimentos cirúrgicos ou invasivos só é possível devido à anestesia. Outro benefício é a analgesia pós-operatória, a possibilidade de manter-se com a dor devidamente controlada no período pós-operatório.</p>
-
-      <h4>6. Riscos e complicações</h4>
-      <p><strong>Anestesia geral/Sedação:</strong> náuseas e vômitos, dor de garganta, lesão dentária, reações alérgicas, consciência intraoperatória, AVC, arritmias cardíacas, aspiração de conteúdo gástrico, infarto agudo do miocárdio, perda visual, hipóxia, parada cardiorrespiratória, óbito.</p>
-      <p><strong>Anestesia regional:</strong> cefaleia, infecção, lesão nervosa, falha parcial ou total da técnica, intoxicação por anestésico local, parada cardiorrespiratória, óbito.</p>
-      <p>Taxa de eventos menores (náusea, vômito, cefaleia): 18 a 22%. Eventos graves (reações alérgicas, infarto): 0,45 a 1,4%. Sequelas permanentes: 0,2 a 0,6%. Mortalidade relacionada à anestesia estimada em 4,3 por 100.000 anestesias.</p>
-
-      <h4>7. Alternativas ao procedimento</h4>
-      <p>Procedimentos menores podem ser realizados com anestesia local ou até mesmo sem anestesia. Na maioria dos casos, não realizar a anestesia impossibilita a realização do procedimento cirúrgico ou invasivo.</p>
-
-      <h4>8. Recuperação</h4>
-      <p>Após a anestesia, o paciente é normalmente encaminhado para uma Unidade de Recuperação Anestésica (RPA), onde permanecerá monitorizado até a recuperação completa. Sintomas comuns: sonolência, frio, tremores, coceira, dor, náuseas e vômitos.</p>
-
-      <h4>9. Autorização</h4>
-      <p>Autorizo o Dr. Igor ou outro anestesiologista da equipe devidamente habilitado a realizar o procedimento anestésico. Autorizo também qualquer outro procedimento, exame, tratamento e/ou transfusão de sangue em situações imprevistas. Estou ciente de que no momento da alta deverei estar acompanhado por uma pessoa adulta capaz e confiável. Reservo-me o direito de revogar este consentimento até que o procedimento seja iniciado.</p>
-
-      <p style="margin-top: 1rem; font-size: 11px; color: var(--text-3);">Referências: 1. Anesthesia and patient safety. Current Opinions in Anesthesiology, 2011;24:349-353. 2. Perioperative mortality in developed countries. The Lancet, 2012;380:1075-1081.</p>
+      <p><strong>a. Acompanhamento do Serviço de Anestesia.</strong> <strong>b. Sedação:</strong> varia de leve a profunda. <strong>c. Anestesia geral:</strong> estado de perda de consciência — administrada por via venosa, inalatória ou combinada. <strong>d. Bloqueios espinhais:</strong> raquianestesia e anestesia peridural. <strong>e. Bloqueios tronculares:</strong> anestesia de segmento específico do corpo. <strong>f. Outros procedimentos:</strong> cateter venoso central, punção arterial, sondagem gástrica, entre outros.</p>
+      <h4>4. Benefícios</h4>
+      <p>A maioria dos procedimentos cirúrgicos só é possível graças à anestesia, incluindo o controle da dor no pós-operatório (analgesia pós-operatória).</p>
+      <h4>5. Riscos e complicações</h4>
+      <p><strong>Anestesia geral/Sedação:</strong> náuseas, vômitos, dor de garganta, lesão dentária, reações alérgicas, consciência intraoperatória, AVC, arritmias, aspiração gástrica, infarto, parada cardiorrespiratória, óbito.</p>
+      <p><strong>Anestesia regional:</strong> cefaleia, infecção, lesão nervosa, falha técnica, intoxicação por anestésico local, parada cardiorrespiratória, óbito.</p>
+      <p>Taxa de eventos menores: 18–22%. Eventos graves: 0,45–1,4%. Sequelas permanentes: 0,2–0,6%. Mortalidade estimada: 4,3 por 100.000 anestesias.</p>
+      <h4>6. Alternativas</h4>
+      <p>Procedimentos menores podem ser realizados com anestesia local. Na maioria dos casos, não realizar a anestesia impossibilita o procedimento.</p>
+      <h4>7. Recuperação</h4>
+      <p>Após a anestesia, o paciente é encaminhado à Unidade de Recuperação Anestésica (RPA). Sintomas comuns: sonolência, frio, tremores, coceira, dor, náuseas e vômitos. Pacientes de maior risco podem ser encaminhados à UTI.</p>
+      <h4>8. Autorização</h4>
+      <p>Autorizo o Dr. Igor ou outro anestesiologista da equipe a realizar o procedimento anestésico. Autorizo também qualquer procedimento adicional, transfusão de sangue ou hemocomponentes em situações imprevistas. Estou ciente de que na alta deverei estar acompanhado por pessoa adulta capaz. Reservo-me o direito de revogar este consentimento até o início do procedimento.</p>
+      <p style="margin-top:1rem; font-size:11px; color:var(--text-3);">Ref.: Current Opinions in Anesthesiology 2011;24:349-353 · The Lancet 2012;380:1075-1081</p>
     </div>
 
     <div class="field">
-      <label>Assinatura digital — escreva seu nome completo</label>
-      <input type="text" id="assinatura" placeholder="Digite seu nome completo como assinatura">
+      <label>Nome completo</label>
+      <input type="text" id="assinatura" placeholder="Digite seu nome completo">
     </div>
     <div class="row">
       <div class="field"><label>CPF / Documento</label><input type="text" id="docNum" placeholder="000.000.000-00"></div>
       <div class="field"><label>Grau de parentesco (se responsável)</label><input type="text" id="parentesco" placeholder="deixe em branco se paciente"></div>
     </div>
 
-    <label class="cb-item" style="margin-top: 4px; width: 100%; border-radius: var(--radius);" id="cbConsent" onclick="toggleConsent()">
+    <label class="cb-item" style="margin-top:4px; width:100%; border-radius:var(--radius);" id="cbConsent" onclick="toggleConsent()">
       <input type="checkbox" id="chkConsent"> Li e concordo com o termo de consentimento acima
     </label>
 
@@ -1026,37 +710,32 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════
-       ETAPA 7 — Teleconsulta
-  ═══════════════════════════════════════════ -->
+  <!-- ═══ ETAPA 7 — Teleconsulta ═══ -->
   <div class="step" id="step6">
     <div class="step-header">
       <div class="step-eyebrow">Etapa 7 de 8</div>
       <div class="step-title">Teleconsulta</div>
-      <div class="step-sub">Escolha o melhor dia e horário para sua consulta com o anestesiologista.</div>
+      <div class="step-sub">Escolha o melhor dia e horário.</div>
     </div>
 
     <div class="teleconsulta-card">
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-        <div style="width: 36px; height: 36px; background: var(--blue-light); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-          <i class="ti ti-user-circle" style="color: var(--blue); font-size: 18px;"></i>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:36px;height:36px;background:var(--blue-light);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+          <i class="ti ti-user-circle" style="color:var(--blue);font-size:18px;"></i>
         </div>
         <div>
-          <div style="font-size: 14px; font-weight: 500; color: var(--text);">Dr. Igor — Anestesiologista</div>
-          <div style="font-size: 12px; color: var(--text-2);">Teleconsulta pré-anestésica · 30 min</div>
+          <div style="font-size:14px;font-weight:500;color:var(--text);">Dr. Igor — Anestesiologista</div>
+          <div style="font-size:12px;color:var(--text-2);">Teleconsulta pré-anestésica · 30 min</div>
         </div>
       </div>
-
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
-        <button onclick="changeMonth(-1)" style="background: none; border: none; cursor: pointer; color: var(--text-2); font-size: 20px; padding: 4px 8px;">‹</button>
-        <div style="font-size: 13px; font-weight: 500; color: var(--text);" id="calMonthLabel"></div>
-        <button onclick="changeMonth(1)" style="background: none; border: none; cursor: pointer; color: var(--text-2); font-size: 20px; padding: 4px 8px;">›</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <button onclick="changeMonth(-1)" style="background:none;border:none;cursor:pointer;color:var(--text-2);font-size:20px;padding:4px 8px;">‹</button>
+        <div style="font-size:13px;font-weight:500;color:var(--text);" id="calMonthLabel"></div>
+        <button onclick="changeMonth(1)" style="background:none;border:none;cursor:pointer;color:var(--text-2);font-size:20px;padding:4px 8px;">›</button>
       </div>
-
       <div class="cal-grid" id="calGrid"></div>
-
-      <div id="timeSlotSection" style="display:none; margin-top: 8px;">
-        <div style="font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;">Horários disponíveis</div>
+      <div id="timeSlotSection" style="display:none;margin-top:8px;">
+        <div style="font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Horários disponíveis</div>
         <div class="time-slots" id="timeSlots"></div>
       </div>
     </div>
@@ -1072,226 +751,344 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════
-       ETAPA 8 — Conclusão
-  ═══════════════════════════════════════════ -->
+  <!-- ═══ ETAPA 8 — Conclusão ═══ -->
   <div class="step" id="step7">
     <div class="success-screen">
       <div class="success-icon"><i class="ti ti-check"></i></div>
-      <div class="step-title" style="margin-bottom: 8px;">Avaliação enviada!</div>
-      <p style="font-size: 14px; color: var(--text-2); margin-bottom: 2rem; max-width: 320px; margin-left: auto; margin-right: auto; line-height: 1.6;">O Dr. Igor revisará suas informações antes da teleconsulta. Você receberá a confirmação pelo WhatsApp.</p>
-
-      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 360px; margin: 0 auto;">
-        <button class="btn-next" style="background: var(--blue);" onclick="alert('Resumo disponível após integração com o sistema.')">
+      <div class="step-title" style="margin-bottom:8px;">Avaliação enviada!</div>
+      <p style="font-size:14px;color:var(--text-2);margin-bottom:2rem;max-width:320px;margin-left:auto;margin-right:auto;line-height:1.6;">
+        O Dr. Igor revisará suas informações antes da teleconsulta. Você receberá a confirmação pelo WhatsApp.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:10px;max-width:360px;margin:0 auto;">
+        <button class="btn-next" style="background:var(--blue);" onclick="alert('Resumo disponível após integração com o sistema.')">
           <i class="ti ti-file-text"></i> Ver resumo da avaliação
         </button>
-        <button class="btn-next" style="background: var(--green);" onclick="alert('Ebook disponível após integração com o sistema.')">
+        <button class="btn-next" style="background:var(--green);" onclick="alert('Ebook disponível após integração com o sistema.')">
           <i class="ti ti-book"></i> Baixar ebook explicativo pré-op
         </button>
-        <button class="btn-next" style="background: #5F5E5A;" onclick="alert('Termo em PDF disponível após integração com o sistema.')">
+        <button class="btn-next" style="background:#5F5E5A;" onclick="alert('Termo em PDF disponível após integração com o sistema.')">
           <i class="ti ti-file-certificate"></i> Baixar termo assinado (PDF)
         </button>
       </div>
-
-      <div class="info-box" style="margin-top: 2rem; text-align: left;">
+      <div class="info-box" style="margin-top:2rem;text-align:left;">
         <i class="ti ti-info-circle"></i>
         <span>Em caso de dúvidas, entre em contato pelo WhatsApp do consultório antes da sua teleconsulta.</span>
       </div>
     </div>
   </div>
-</div>
+
+</div><!-- /portal -->
 
 <script>
-  let currentStep = 0;
-  let selectedDay = null;
-  let selectedTime = null;
-  let calYear, calMonth;
-  let dorValue = null;
+// ─── Estado global ───────────────────────────────────
+let currentStep = 0;
+let selectedDay = null, selectedTime = null;
+let calYear, calMonth;
+const now = new Date();
+calYear = now.getFullYear(); calMonth = now.getMonth();
 
-  const now = new Date();
-  calYear = now.getFullYear();
-  calMonth = now.getMonth();
-
-  function goTo(n) {
-    document.getElementById('step' + currentStep).classList.remove('active');
-    currentStep = n;
-    document.getElementById('step' + n).classList.add('active');
-    updateProgress();
-    if (n === 4) renderScores();
-    if (n === 6) renderCal();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function updateProgress() {
-    for (let i = 0; i < 8; i++) {
-      const el = document.getElementById('pb' + i);
-      el.className = 'progress-step' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
-    }
-  }
-
-  function updateCb(input) {
-    const item = input.closest('.cb-item');
-    if (input.checked) item.classList.add('checked');
-    else item.classList.remove('checked');
-  }
-
-  function selFrag(input) {
-    document.querySelectorAll('#fragGroup .cb-item').forEach(el => el.classList.remove('checked'));
-    input.closest('.cb-item').classList.add('checked');
-  }
-
-  function toggleConsent() {
-    const chk = document.getElementById('chkConsent');
-    chk.checked = !chk.checked;
-    document.getElementById('cbConsent').classList.toggle('checked', chk.checked);
-  }
-
-  function selDor(val) {
-    dorValue = val;
-    document.querySelectorAll('.dor-btn').forEach((btn, i) => {
-      btn.classList.toggle('selected', i === val);
-    });
-  }
-
-  function getAllChecked() {
-    return Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map(i => i.value);
-  }
-
-  function calcLee() {
-    const conds = getAllChecked();
-    let score = 0;
-    if (conds.includes('coronario') || conds.includes('iami') || conds.includes('angina') || conds.includes('angioplastia')) score++;
-    if (conds.includes('ic')) score++;
-    if (conds.includes('avc') || conds.includes('convulsao')) score++;
-    if (conds.includes('dm')) score++;
-    if (conds.includes('drc')) score++;
-    const cirurgia = (document.getElementById('cirurgia').value || '').toLowerCase();
-    if (cirurgia.includes('aort') || cirurgia.includes('vasc') || cirurgia.includes('esôfag') || cirurgia.includes('torac')) score++;
-    const labels = ['Muito baixo', 'Baixo', 'Intermediário', 'Alto', 'Alto'];
-    const badges = ['badge-low', 'badge-low', 'badge-mid', 'badge-high', 'badge-high'];
-    return { score, label: labels[Math.min(score, 4)], badgeClass: badges[Math.min(score, 4)] };
-  }
-
-  function calcApfel() {
-    const sexo = document.getElementById('sexo').value;
-    const conds = getAllChecked();
-    const tabaco = conds.includes('tabaco');
-    let score = 0;
-    if (sexo === 'F') score++;
-    if (!tabaco) score++;
-    const labels = ['0–10%', '10–20%', '~30%', '60–80%'];
-    const badges = ['badge-low', 'badge-low', 'badge-mid', 'badge-high'];
-    return { score, label: labels[Math.min(score, 3)], badgeClass: badges[Math.min(score, 3)] };
-  }
-
-  function calcASA() {
-    const conds = getAllChecked();
-    const hasSevere = conds.includes('ic') || conds.includes('iami') || conds.includes('dpoc') || conds.includes('dialise') || conds.includes('cirrose');
-    const hasMild = conds.includes('hta') || conds.includes('asma') || conds.includes('dm') || conds.includes('anemia') || conds.includes('tabaco') || conds.includes('cancer') || conds.includes('apneia');
-    const score = hasSevere ? 3 : hasMild ? 2 : 1;
-    const labels = ['—', 'I — Saudável', 'II — Doença leve', 'III — Doença grave'];
-    const badges = ['', 'badge-low', 'badge-low', 'badge-mid'];
-    return { score, label: labels[score], badgeClass: badges[score] };
-  }
-
-  function renderScores() {
-    const lee = calcLee();
-    const apfel = calcApfel();
-    const asa = calcASA();
-    document.getElementById('scoreContent').innerHTML = `
-      <div class="score-grid">
-        <div class="score-card">
-          <div class="score-title">Lee (RCRI)</div>
-          <div class="score-value">${lee.score}</div>
-          <div class="score-label"><span class="badge ${lee.badgeClass}">${lee.label}</span></div>
-        </div>
-        <div class="score-card">
-          <div class="score-title">Apfel (NVPO)</div>
-          <div class="score-value">${apfel.score}</div>
-          <div class="score-label"><span class="badge ${apfel.badgeClass}">Risco ${apfel.label}</span></div>
-        </div>
-        <div class="score-card">
-          <div class="score-title">Classe ASA</div>
-          <div class="score-value">${asa.score}</div>
-          <div class="score-label"><span class="badge ${asa.badgeClass}">${asa.label}</span></div>
-        </div>
-      </div>
-    `;
-  }
-
-  function handleUpload(inputId, previewId, aiId, textId, type) {
-    const files = document.getElementById(inputId).files;
-    if (!files.length) return;
-    const preview = document.getElementById(previewId);
-    preview.innerHTML = '';
-    for (const f of files) {
-      preview.innerHTML += `<div class="file-preview"><i class="ti ti-file-check"></i> ${f.name}</div>`;
-    }
-    const aiEl = document.getElementById(aiId);
-    const textEl = document.getElementById(textId);
-    aiEl.style.display = 'block';
-    textEl.innerHTML = '<span class="spinner"></span>';
-    setTimeout(() => {
-      if (type === 'lab') {
-        textEl.innerHTML = 'Valores identificados: <strong>Hb 12.4 g/dL</strong> · <strong>Ht 37%</strong> · <strong>Cr 0.9 mg/dL</strong> · <strong>K 4.1 mEq/L</strong> · <strong>INR 1.0</strong><br><span style="font-size:11px; opacity:0.8;">Pré-preenchidos abaixo para revisão médica obrigatória</span>';
-      } else {
-        textEl.innerHTML = 'ECG analisado: <strong>Ritmo sinusal</strong> · FC 72 bpm · Intervalo PR e QRS normais · Sem alterações agudas identificadas.<br><span style="font-size:11px; opacity:0.8;">Disponível para revisão pelo anestesiologista</span>';
-      }
-    }, 1800);
-  }
-
-  // Calendário
-  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  const days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
-  const avail = [10, 13, 14, 17, 20, 21, 24, 27];
-  const times = ['08:00','09:00','10:00','11:00','14:00','15:00','16:00','17:00'];
-
-  function changeMonth(d) {
-    calMonth += d;
-    if (calMonth > 11) { calMonth = 0; calYear++; }
-    if (calMonth < 0) { calMonth = 11; calYear--; }
-    renderCal();
-  }
-
-  function renderCal() {
-    document.getElementById('calMonthLabel').textContent = months[calMonth] + ' ' + calYear;
-    const grid = document.getElementById('calGrid');
-    let html = days.map(d => `<div class="cal-day header">${d}</div>`).join('');
-    const first = new Date(calYear, calMonth, 1).getDay();
-    for (let i = 0; i < first; i++) html += `<div class="cal-day disabled"></div>`;
-    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-    for (let d = 1; d <= daysInMonth; d++) {
-      const isAvail = avail.includes(d);
-      const isSel = selectedDay === d;
-      const cls = isSel ? 'selected' : isAvail ? 'available' : 'disabled';
-      html += `<div class="cal-day ${cls}" ${isAvail ? `onclick="selectDay(${d})"` : ''}>${d}</div>`;
-    }
-    grid.innerHTML = html;
-  }
-
-  function selectDay(d) {
-    selectedDay = d;
-    selectedTime = null;
-    renderCal();
-    const ts = document.getElementById('timeSlotSection');
-    ts.style.display = 'block';
-    document.getElementById('timeSlots').innerHTML = times.map(t =>
-      `<div class="time-slot" onclick="selectTime('${t}','${d}')">${t}</div>`
-    ).join('');
-    document.getElementById('appointmentConfirm').style.display = 'none';
-  }
-
-  function selectTime(t, d) {
-    selectedTime = t;
-    document.querySelectorAll('.time-slot').forEach(el => el.classList.toggle('selected', el.textContent === t));
-    document.getElementById('appointmentConfirm').style.display = 'block';
-    document.getElementById('appointmentText').innerHTML =
-      `Teleconsulta agendada para <strong>${d} de ${months[calMonth]}</strong> às <strong>${t}</strong><br>
-       <span style="font-size:11px; opacity:0.8;">Link de acesso enviado por WhatsApp/e-mail após confirmação.</span>`;
-  }
-
-  // Init
+// ─── Navegação ───────────────────────────────────────
+function goTo(n) {
+  document.getElementById('step' + currentStep).classList.remove('active');
+  currentStep = n;
+  document.getElementById('step' + n).classList.add('active');
   updateProgress();
+  if (n === 4) renderScores();
+  if (n === 6) renderCal();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  for (let i = 0; i < 8; i++) {
+    const el = document.getElementById('pb' + i);
+    el.className = 'progress-step' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
+  }
+}
+
+// ─── Checkboxes ──────────────────────────────────────
+function updateCb(input) {
+  const item = input.closest('.cb-item');
+  if (input.checked) item.classList.add('checked');
+  else item.classList.remove('checked');
+}
+
+function toggleOutros(wrapId, input) {
+  const wrap = document.getElementById(wrapId);
+  if (!wrap) return;
+  if (input.checked) wrap.classList.add('visible');
+  else wrap.classList.remove('visible');
+}
+
+function toggleConsent() {
+  const chk = document.getElementById('chkConsent');
+  chk.checked = !chk.checked;
+  document.getElementById('cbConsent').classList.toggle('checked', chk.checked);
+}
+
+// ─── Fragilidade ─────────────────────────────────────
+function selFrag(card, val) {
+  document.querySelectorAll('.frag-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+}
+
+// ─── IMC ─────────────────────────────────────────────
+function calcIMC() {
+  const peso = parseFloat(document.getElementById('peso').value);
+  const altura = parseFloat(document.getElementById('altura').value);
+  const card = document.getElementById('imcCard');
+  if (!peso || !altura || altura < 50) { card.style.display = 'none'; return; }
+  const imc = peso / Math.pow(altura / 100, 2);
+  let classe, badge, icon;
+  if (imc < 18.5)      { classe = 'Abaixo do peso'; badge = 'color:#9A6200'; icon = '⚠️'; }
+  else if (imc < 25)   { classe = 'Peso normal'; badge = 'color:#1A6B48'; icon = '✅'; }
+  else if (imc < 30)   { classe = 'Sobrepeso'; badge = 'color:#9A6200'; icon = '⚠️'; }
+  else if (imc < 35)   { classe = 'Obesidade grau I'; badge = 'color:#B83030'; icon = '🔴'; }
+  else if (imc < 40)   { classe = 'Obesidade grau II'; badge = 'color:#B83030'; icon = '🔴'; }
+  else                  { classe = 'Obesidade grau III'; badge = 'color:#8B0000'; icon = '🔴'; }
+  document.getElementById('imcValue').textContent = imc.toFixed(1);
+  document.getElementById('imcClass').innerHTML = `<span style="${badge}">${classe}</span>`;
+  document.getElementById('imcIcon').textContent = icon;
+  card.style.display = 'flex';
+}
+
+// ─── TUSS ─────────────────────────────────────────────
+const tussData = [
+  { code: '31309023', name: 'Colecistectomia videolaparoscópica' },
+  { code: '31309015', name: 'Colecistectomia convencional' },
+  { code: '31005039', name: 'Apendicectomia' },
+  { code: '31005047', name: 'Apendicectomia videolaparoscópica' },
+  { code: '40801013', name: 'Artroplastia total de quadril' },
+  { code: '40801021', name: 'Artroplastia total de joelho' },
+  { code: '31003072', name: 'Herniorrafia inguinal' },
+  { code: '31003080', name: 'Herniorrafia inguinal videolaparoscópica' },
+  { code: '31003102', name: 'Herniorrafia umbilical' },
+  { code: '31303017', name: 'Gastrectomia parcial' },
+  { code: '31303025', name: 'Gastrectomia total' },
+  { code: '31601022', name: 'Histerectomia total abdominal' },
+  { code: '31601030', name: 'Histerectomia videolaparoscópica' },
+  { code: '31605014', name: 'Cesariana' },
+  { code: '30910010', name: 'Tireoidectomia total' },
+  { code: '30910028', name: 'Tireoidectomia parcial' },
+  { code: '30504018', name: 'Coluna — artrodese cervical' },
+  { code: '30504026', name: 'Coluna — artrodese lombar' },
+  { code: '30721013', name: 'Revascularização miocárdica' },
+  { code: '30721021', name: 'Cirurgia valvar cardíaca' },
+  { code: '40706018', name: 'Amigdalectomia' },
+  { code: '31011013', name: 'Colostomia' },
+  { code: '31011021', name: 'Colostomia desfazimento' },
+  { code: '31309031', name: 'Esplenectomia videolaparoscópica' },
+  { code: '40202038', name: 'Cataratas — facoemulsificação' },
+  { code: '30732013', name: 'Bypass gástrico (bariátrica)' },
+  { code: '31301023', name: 'Gastrectomia vertical (sleeve)' },
+  { code: '40801056', name: 'Osteossíntese de fêmur' },
+  { code: '40801064', name: 'Osteossíntese de tíbia' },
+  { code: '30724015', name: 'Angioplastia coronariana' },
+];
+
+function searchTuss(val) {
+  const dd = document.getElementById('tussDropdown');
+  const sel = document.getElementById('tussSelected');
+  if (val.length < 2) { dd.style.display = 'none'; sel.style.display = 'none'; return; }
+  const results = tussData.filter(t => t.name.toLowerCase().includes(val.toLowerCase()) || t.code.includes(val)).slice(0, 6);
+  if (!results.length) { dd.style.display = 'none'; return; }
+  dd.innerHTML = results.map(t =>
+    `<div class="tuss-option" onclick="selectTuss('${t.code}','${t.name.replace(/'/g,"\\'")}')">
+      <span class="tuss-code">TUSS ${t.code}</span>
+      <span class="tuss-name">${t.name}</span>
+    </div>`
+  ).join('');
+  dd.style.display = 'block';
+}
+
+function selectTuss(code, name) {
+  document.getElementById('cirurgiaInput').value = name;
+  document.getElementById('tussDropdown').style.display = 'none';
+  const sel = document.getElementById('tussSelected');
+  document.getElementById('tussSelectedText').textContent = `Código TUSS ${code} — ${name}`;
+  sel.style.display = 'flex';
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.tuss-wrap')) document.getElementById('tussDropdown').style.display = 'none';
+});
+
+// ─── Alerta de medicamentos ───────────────────────────
+const medRules = [
+  { patterns: ['aas','ácido acetilsalicílico','aspirina'], name: 'AAS / Aspirina', suspensao: '7 dias antes da cirurgia (conforme avaliação do cardiologista)' },
+  { patterns: ['clopidogrel','plavix'], name: 'Clopidogrel', suspensao: '5 a 7 dias antes da cirurgia' },
+  { patterns: ['prasugrel','efient'], name: 'Prasugrel', suspensao: '7 dias antes da cirurgia' },
+  { patterns: ['ticagrelor','brilique'], name: 'Ticagrelor', suspensao: '5 dias antes da cirurgia' },
+  { patterns: ['warfarina','varfarina','coumadin'], name: 'Warfarina', suspensao: '5 dias antes (controle de INR obrigatório)' },
+  { patterns: ['rivaroxabana','xarelto'], name: 'Rivaroxabana', suspensao: '24–48h antes (cirurgia de baixo risco) ou 48–72h (alto risco)' },
+  { patterns: ['apixabana','eliquis'], name: 'Apixabana', suspensao: '24–48h antes (baixo risco) ou 48–72h (alto risco)' },
+  { patterns: ['dabigatrana','pradaxa'], name: 'Dabigatrana', suspensao: '24–96h antes (conforme função renal e risco cirúrgico)' },
+  { patterns: ['enoxaparina','clexane','heparina'], name: 'Heparina / HBPM', suspensao: '12–24h antes (conforme protocolo do serviço)' },
+  { patterns: ['metformina','glucoformin'], name: 'Metformina', suspensao: '24–48h antes (suspender no dia anterior)' },
+  { patterns: ['insulina'], name: 'Insulina', suspensao: 'Ajuste de dose no dia anterior e no dia da cirurgia — protocolo específico com endocrinologista' },
+  { patterns: ['glibenclamida','gliclazida','glipizida','sulfonilureia'], name: 'Sulfonilureia (hipoglicemiante oral)', suspensao: 'Suspender no dia da cirurgia' },
+  { patterns: ['semaglutida','ozempic','wegovy'], name: 'Semaglutida (Ozempic / Wegovy)', suspensao: '7 dias antes (risco de esvaziamento gástrico retardado)' },
+  { patterns: ['tirzepatida','mounjaro'], name: 'Tirzepatida (Mounjaro)', suspensao: '7 dias antes (risco de esvaziamento gástrico retardado)' },
+  { patterns: ['liraglutida','saxenda','victoza'], name: 'Liraglutida (Saxenda / Victoza)', suspensao: '3 dias antes (risco de esvaziamento gástrico retardado)' },
+  { patterns: ['dulaglutida','trulicity'], name: 'Dulaglutida (Trulicity)', suspensao: '7 dias antes (risco de esvaziamento gástrico retardado)' },
+  { patterns: ['rebelzius','rebelsu','orforglipron'], name: 'Rebelzius / análogos GLP-1 orais', suspensao: '7 dias antes (risco de esvaziamento gástrico retardado)' },
+];
+
+function checkMedAlerts(val) {
+  const lower = val.toLowerCase();
+  const found = medRules.filter(r => r.patterns.some(p => lower.includes(p)));
+  const alertEl = document.getElementById('medAlert');
+  const itemsEl = document.getElementById('medAlertItems');
+  if (!found.length) { alertEl.style.display = 'none'; return; }
+  itemsEl.innerHTML = found.map(r =>
+    `<div class="med-alert-item">
+      <i class="ti ti-clock"></i>
+      <div><strong>${r.name}</strong><br>${r.suspensao}</div>
+    </div>`
+  ).join('');
+  alertEl.style.display = 'block';
+}
+
+// ─── Upload ───────────────────────────────────────────
+function handleUpload(inputId, previewId, aiId, textId, type) {
+  const files = document.getElementById(inputId).files;
+  if (!files.length) return;
+  const preview = document.getElementById(previewId);
+  preview.innerHTML = '';
+  for (const f of files) preview.innerHTML += `<div class="file-preview"><i class="ti ti-file-check"></i> ${f.name}</div>`;
+  const aiEl = document.getElementById(aiId);
+  const textEl = document.getElementById(textId);
+  aiEl.style.display = 'block';
+  textEl.innerHTML = '<span class="spinner"></span>';
+  setTimeout(() => {
+    if (type === 'lab') {
+      textEl.innerHTML = 'Valores identificados: <strong>Hb 12.4 g/dL</strong> · <strong>Ht 37%</strong> · <strong>Cr 0.9 mg/dL</strong> · <strong>K 4.1 mEq/L</strong> · <strong>INR 1.0</strong><br><span style="font-size:11px;opacity:0.8;">Pré-preenchidos abaixo para revisão médica obrigatória</span>';
+    } else {
+      textEl.innerHTML = 'ECG analisado: <strong>Ritmo sinusal</strong> · FC 72 bpm · Sem alterações agudas identificadas.<br><span style="font-size:11px;opacity:0.8;">Disponível para revisão pelo anestesiologista</span>';
+    }
+  }, 1800);
+}
+
+function handleUploadSimples(inputId, previewId) {
+  const files = document.getElementById(inputId).files;
+  if (!files.length) return;
+  const preview = document.getElementById(previewId);
+  preview.innerHTML = '';
+  for (const f of files) preview.innerHTML += `<div class="file-preview"><i class="ti ti-file-check"></i> ${f.name}</div>`;
+}
+
+// ─── Escores ─────────────────────────────────────────
+function getAllChecked() {
+  return Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map(i => i.value);
+}
+
+function calcLee() {
+  const c = getAllChecked();
+  let score = 0;
+  if (c.some(v => ['coronario','iami','angina','angioplastia'].includes(v))) score++;
+  if (c.includes('ic')) score++;
+  if (c.some(v => ['avc','convulsao'].includes(v))) score++;
+  if (c.includes('dm')) score++;
+  if (c.includes('drc')) score++;
+  const cir = (document.getElementById('cirurgiaInput').value || '').toLowerCase();
+  if (cir.match(/aort|vasc|esôfag|torac/)) score++;
+  const labels = ['Muito baixo','Baixo','Intermediário','Alto','Alto'];
+  const badges = ['badge-low','badge-low','badge-mid','badge-high','badge-high'];
+  return { score, label: labels[Math.min(score,4)], badgeClass: badges[Math.min(score,4)] };
+}
+
+function calcApfel() {
+  const sexo = document.getElementById('sexo').value;
+  const c = getAllChecked();
+  let score = 0;
+  if (sexo === 'F') score++;
+  if (!c.includes('tabaco')) score++;
+  const labels = ['0–10%','10–20%','~30%','60–80%'];
+  const badges = ['badge-low','badge-low','badge-mid','badge-high'];
+  return { score, label: labels[Math.min(score,3)], badgeClass: badges[Math.min(score,3)] };
+}
+
+function calcASA() {
+  const c = getAllChecked();
+  const hasSevere = c.some(v => ['ic','iami','dpoc','dialise','cirrose'].includes(v));
+  const hasMild = c.some(v => ['hta','asma','dm','anemia','tabaco','cancer','apneia'].includes(v));
+  const score = hasSevere ? 3 : hasMild ? 2 : 1;
+  const labels = ['—','I — Saudável','II — Doença leve','III — Doença grave'];
+  const badges = ['','badge-low','badge-low','badge-mid'];
+  return { score, label: labels[score], badgeClass: badges[score] };
+}
+
+function renderScores() {
+  const lee = calcLee(), apfel = calcApfel(), asa = calcASA();
+  document.getElementById('scoreContent').innerHTML = `
+    <div class="score-grid">
+      <div class="score-card">
+        <div class="score-title">Lee (RCRI)</div>
+        <div class="score-value">${lee.score}</div>
+        <div class="score-label"><span class="badge ${lee.badgeClass}">${lee.label}</span></div>
+      </div>
+      <div class="score-card">
+        <div class="score-title">Apfel (NVPO)</div>
+        <div class="score-value">${apfel.score}</div>
+        <div class="score-label"><span class="badge ${apfel.badgeClass}">Risco ${apfel.label}</span></div>
+      </div>
+      <div class="score-card">
+        <div class="score-title">Classe ASA</div>
+        <div class="score-value">${asa.score}</div>
+        <div class="score-label"><span class="badge ${asa.badgeClass}">${asa.label}</span></div>
+      </div>
+    </div>`;
+}
+
+// ─── Calendário ──────────────────────────────────────
+const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const avail = [10,13,14,17,20,21,24,27];
+const times = ['08:00','09:00','10:00','11:00','14:00','15:00','16:00','17:00'];
+
+function changeMonth(d) {
+  calMonth += d;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  renderCal();
+}
+
+function renderCal() {
+  document.getElementById('calMonthLabel').textContent = months[calMonth] + ' ' + calYear;
+  const grid = document.getElementById('calGrid');
+  let html = days.map(d => `<div class="cal-day header">${d}</div>`).join('');
+  const first = new Date(calYear, calMonth, 1).getDay();
+  for (let i = 0; i < first; i++) html += `<div class="cal-day disabled"></div>`;
+  const total = new Date(calYear, calMonth + 1, 0).getDate();
+  for (let d = 1; d <= total; d++) {
+    const isA = avail.includes(d);
+    const isSel = selectedDay === d;
+    const cls = isSel ? 'selected' : isA ? 'available' : 'disabled';
+    html += `<div class="cal-day ${cls}" ${isA ? `onclick="selectDay(${d})"` : ''}>${d}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function selectDay(d) {
+  selectedDay = d; selectedTime = null;
+  renderCal();
+  document.getElementById('timeSlotSection').style.display = 'block';
+  document.getElementById('timeSlots').innerHTML = times.map(t =>
+    `<div class="time-slot" onclick="selectTime('${t}','${d}')">${t}</div>`
+  ).join('');
+  document.getElementById('appointmentConfirm').style.display = 'none';
+}
+
+function selectTime(t, d) {
+  selectedTime = t;
+  document.querySelectorAll('.time-slot').forEach(el => el.classList.toggle('selected', el.textContent === t));
+  document.getElementById('appointmentConfirm').style.display = 'block';
+  document.getElementById('appointmentText').innerHTML =
+    `Teleconsulta agendada para <strong>${d} de ${months[calMonth]}</strong> às <strong>${t}</strong><br>
+     <span style="font-size:11px;opacity:0.8;">Link de acesso enviado por WhatsApp/e-mail após confirmação.</span>`;
+}
+
+// ─── Init ─────────────────────────────────────────────
+updateProgress();
 </script>
 </body>
 </html>
