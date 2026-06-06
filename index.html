@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --blue:#1A5FA8; --blue-light:#E8F1FB; --blue-mid:#3478C8;
@@ -792,18 +791,17 @@
 // ═══════════════════════════════════════════════════════════
 // CONFIGURAÇÃO SUPABASE
 // ───────────────────────────────────────────────────────────
-// ➊ Substitua SUPABASE_URL pela Project URL do seu projeto
-// ➋ Substitua SUPABASE_KEY pela Publishable (anon) Key
-// Ambas estão em: Supabase → Settings → API
+// ➊ SUPABASE_URL  → Project URL  (Settings → API → Project URL)
+//    Formato exato: https://xxxxxxxxxxx.supabase.co
+//    SEM barra final, SEM /rest/v1/ — o código adiciona o caminho correto
+//
+// ➋ SUPABASE_KEY  → Publishable anon key (Settings → API → anon public)
 // ═══════════════════════════════════════════════════════════
 const SUPABASE_URL = 'https://vffvdfilirwckrbbduvr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_5ZF-yky3AY18ifafebJTaQ_-V-iJQSX';
 
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
 // ─── Coleta todos os dados do formulário ─────────────────
 function coletarDados() {
-  // Calcular idade a partir da data de nascimento
   let idadeNum = null;
   const dataNascVal = document.getElementById('dataNasc').value;
   if (dataNascVal) {
@@ -812,72 +810,88 @@ function coletarDados() {
     let idade = hoje.getFullYear() - nasc.getFullYear();
     const m = hoje.getMonth() - nasc.getMonth();
     if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--;
-    idadeNum = idade >= 0 && idade <= 130 ? idade : null;
+    idadeNum = (idade >= 0 && idade <= 130) ? idade : null;
   }
 
-  // Agendamento teleconsulta
   const calLabel = document.getElementById('calMonthLabel').textContent || '';
   let dataConsulta = null;
   let horarioConsulta = null;
   if (selectedDay && selectedTime && calLabel) {
-    dataConsulta = `${String(selectedDay).padStart(2,'0')} de ${calLabel}`;
+    dataConsulta  = String(selectedDay).padStart(2, '0') + ' de ' + calLabel;
     horarioConsulta = selectedTime;
   }
 
   return {
-    nome:            (document.getElementById('nome').value || '').trim() || null,
-    cpf:             (document.getElementById('cpf').value || '').trim() || null,
-    telefone:        (document.getElementById('telefone').value || '').trim() || null,
-    email:           (document.getElementById('email').value || '').trim() || null,
-    data_nascimento: dataNascVal || null,
-    idade:           idadeNum,
-    cirurgia:        (document.getElementById('cirurgiaInput').value || '').trim() || null,
-    cirurgiao:       null,          // campo não presente no formulário atual; reservado para uso futuro
-    data_consulta:   dataConsulta,
+    nome:             (document.getElementById('nome').value || '').trim() || null,
+    cpf:              (document.getElementById('cpf').value || '').trim() || null,
+    telefone:         (document.getElementById('telefone').value || '').trim() || null,
+    email:            (document.getElementById('email').value || '').trim() || null,
+    data_nascimento:  dataNascVal || null,
+    idade:            idadeNum,
+    cirurgia:         (document.getElementById('cirurgiaInput').value || '').trim() || null,
+    cirurgiao:        null,
+    data_consulta:    dataConsulta,
     horario_consulta: horarioConsulta,
-    status:          'pendente',
+    status:           'pendente',
   };
 }
 
 // ─── Mostrar estado na tela de conclusão ─────────────────
 function mostrarEstado(estado) {
-  document.getElementById('stateSaving').style.display = estado === 'saving'  ? 'block' : 'none';
+  document.getElementById('stateSaving').style.display  = estado === 'saving'  ? 'block' : 'none';
   document.getElementById('stateSuccess').style.display = estado === 'success' ? 'block' : 'none';
   document.getElementById('stateError').style.display   = estado === 'error'   ? 'block' : 'none';
 }
 
-// ─── Função principal: navega e salva ────────────────────
+// ─── Gravar via fetch nativo (REST API do Supabase) ──────
+// Não usa SDK — chamada HTTP direta para /rest/v1/pacientes
+// Isso evita qualquer problema de CDN, resolução de pacote ou versão de SDK.
+async function gravarNoSupabase(dados) {
+  const endpoint = SUPABASE_URL + '/rest/v1/pacientes';
+  const resp = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type':  'application/json',
+      'apikey':         SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Prefer':        'return=minimal',   // não retorna o registro; economiza banda
+    },
+    body: JSON.stringify(dados),
+  });
+
+  if (!resp.ok) {
+    // Tenta extrair mensagem de erro do corpo da resposta
+    let detalhe = 'HTTP ' + resp.status + ' — ' + resp.statusText;
+    try {
+      const corpo = await resp.json();
+      if (corpo.message) detalhe = corpo.message;
+      else if (corpo.error) detalhe = corpo.error;
+    } catch (_) { /* ignora erro de parse */ }
+    throw new Error(detalhe);
+  }
+}
+
+// ─── Função principal ─────────────────────────────────────
 async function finalizarAvaliacao() {
-  // 1. Ir para a etapa 8 e mostrar spinner
   goTo(7);
   mostrarEstado('saving');
 
-  // 2. Coletar dados
   const dados = coletarDados();
 
-  // 3. Gravar no Supabase
   try {
-    const { error } = await _supabase
-      .from('pacientes')
-      .insert([dados]);
-
-    if (error) throw error;
-
-    // ✅ Sucesso
+    await gravarNoSupabase(dados);
     mostrarEstado('success');
-
   } catch (err) {
-    // ❌ Erro amigável
     console.error('Erro ao salvar no Supabase:', err);
-    const msg = err?.message || 'Erro desconhecido. Verifique sua conexão.';
-    document.getElementById('errorMsg').textContent = msg;
+    document.getElementById('errorMsg').textContent =
+      err.message || 'Erro desconhecido. Verifique sua conexão e tente novamente.';
     mostrarEstado('error');
   }
 }
 
-// ─── Tentar novamente após erro ──────────────────────────
+// ─── Tentar novamente após erro ───────────────────────────
 function tentarNovamente() {
-  goTo(6); // Volta para teleconsulta para o paciente confirmar e refinalizar
+  goTo(6);
 }
 
 
