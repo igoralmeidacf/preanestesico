@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --blue:#1A5FA8; --blue-light:#E8F1FB; --blue-mid:#3478C8;
@@ -173,6 +174,15 @@
   .success-screen{text-align:center;padding:2rem 0;}
   .success-icon{width:60px;height:60px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;}
   .success-icon i{font-size:28px;color:var(--green);}
+
+  /* Supabase feedback states */
+  .saving-spinner{width:60px;height:60px;background:var(--blue-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;animation:spin 1s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .saving-spinner i{font-size:28px;color:var(--blue-mid);}
+  .error-icon{width:60px;height:60px;background:var(--red-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;}
+  .error-icon i{font-size:28px;color:var(--red);}
+  .error-box{background:var(--red-light);border:1px solid #F5C5C5;border-radius:var(--radius);padding:.875rem 1rem;font-size:13px;color:var(--red);line-height:1.5;margin:1rem auto;max-width:360px;text-align:left;display:flex;gap:8px;align-items:flex-start;}
+  .error-box i{font-size:16px;flex-shrink:0;margin-top:1px;}
 
   @media(max-width:480px){
     .score-grid{grid-template-columns:1fr 1fr;}
@@ -712,26 +722,37 @@
     </div>
     <div class="nav-row">
       <button class="btn-back" onclick="goTo(5)"><i class="ti ti-arrow-left"></i></button>
-      <button class="btn-next" onclick="goTo(7)">Finalizar <i class="ti ti-check"></i></button>
+      <button class="btn-next" onclick="finalizarAvaliacao()">Finalizar <i class="ti ti-check"></i></button>
     </div>
   </div>
 
   <!-- ═══ ETAPA 8 — Conclusão ═══ -->
   <div class="step" id="step7">
-    <div class="success-screen">
+
+    <!-- Estado: salvando -->
+    <div class="success-screen" id="stateSaving" style="display:none;">
+      <div class="saving-spinner"><i class="ti ti-loader-2"></i></div>
+      <div class="step-title" style="margin-bottom:8px;">Enviando avaliação…</div>
+      <p style="font-size:14px;color:var(--text-2);max-width:300px;margin:0 auto;line-height:1.6;">
+        Aguarde enquanto gravamos seus dados com segurança.
+      </p>
+    </div>
+
+    <!-- Estado: sucesso -->
+    <div class="success-screen" id="stateSuccess" style="display:none;">
       <div class="success-icon"><i class="ti ti-check"></i></div>
-      <div class="step-title" style="margin-bottom:8px;">Avaliação enviada!</div>
+      <div class="step-title" style="margin-bottom:8px;">Avaliação enviada com sucesso.</div>
       <p style="font-size:14px;color:var(--text-2);margin-bottom:2rem;max-width:320px;margin-left:auto;margin-right:auto;line-height:1.6;">
         O Dr. Igor revisará suas informações antes da teleconsulta. Você receberá a confirmação pelo WhatsApp.
       </p>
       <div style="display:flex;flex-direction:column;gap:10px;max-width:360px;margin:0 auto;">
-        <button class="btn-next" style="background:var(--blue);" onclick="alert('Resumo disponível após integração com o sistema.')">
+        <button class="btn-next" style="background:var(--blue);" onclick="alert('Resumo disponível em breve.')">
           <i class="ti ti-file-text"></i> Ver resumo da avaliação
         </button>
-        <button class="btn-next" style="background:var(--green);" onclick="alert('Ebook disponível após integração com o sistema.')">
+        <button class="btn-next" style="background:var(--green);" onclick="alert('Ebook disponível em breve.')">
           <i class="ti ti-book"></i> Baixar ebook explicativo pré-op
         </button>
-        <button class="btn-next" style="background:#5F5E5A;" onclick="alert('Termo em PDF disponível após integração com o sistema.')">
+        <button class="btn-next" style="background:#5F5E5A;" onclick="alert('Termo em PDF disponível em breve.')">
           <i class="ti ti-file-certificate"></i> Baixar termo assinado (PDF)
         </button>
       </div>
@@ -740,11 +761,126 @@
         <span>Em caso de dúvidas, entre em contato pelo WhatsApp do consultório antes da sua teleconsulta.</span>
       </div>
     </div>
+
+    <!-- Estado: erro -->
+    <div class="success-screen" id="stateError" style="display:none;">
+      <div class="error-icon"><i class="ti ti-alert-circle"></i></div>
+      <div class="step-title" style="margin-bottom:8px;color:var(--red);">Não foi possível enviar.</div>
+      <p style="font-size:14px;color:var(--text-2);max-width:320px;margin:0 auto 1rem;line-height:1.6;">
+        Ocorreu um erro ao salvar suas informações. Por favor, tente novamente.
+      </p>
+      <div class="error-box" id="errorDetail">
+        <i class="ti ti-info-circle"></i>
+        <span id="errorMsg">Erro desconhecido. Verifique sua conexão e tente novamente.</span>
+      </div>
+      <div style="max-width:360px;margin:1.5rem auto 0;">
+        <button class="btn-next" style="background:var(--blue);" onclick="tentarNovamente()">
+          <i class="ti ti-refresh"></i> Tentar novamente
+        </button>
+      </div>
+      <div class="info-box" style="margin-top:1.5rem;text-align:left;">
+        <i class="ti ti-info-circle"></i>
+        <span>Se o problema persistir, entre em contato pelo WhatsApp do consultório e informe o erro exibido acima.</span>
+      </div>
+    </div>
+
   </div>
 
 </div><!-- /portal -->
 
 <script>
+// ═══════════════════════════════════════════════════════════
+// CONFIGURAÇÃO SUPABASE
+// ───────────────────────────────────────────────────────────
+// ➊ Substitua SUPABASE_URL pela Project URL do seu projeto
+// ➋ Substitua SUPABASE_KEY pela Publishable (anon) Key
+// Ambas estão em: Supabase → Settings → API
+// ═══════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://vffvdfilirwckrbbduvr.supabase.co';
+const SUPABASE_KEY = 'COLE_SUA_PUBLISHABLE_KEY_AQUI';
+
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ─── Coleta todos os dados do formulário ─────────────────
+function coletarDados() {
+  // Calcular idade a partir da data de nascimento
+  let idadeNum = null;
+  const dataNascVal = document.getElementById('dataNasc').value;
+  if (dataNascVal) {
+    const nasc = new Date(dataNascVal);
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - nasc.getFullYear();
+    const m = hoje.getMonth() - nasc.getMonth();
+    if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--;
+    idadeNum = idade >= 0 && idade <= 130 ? idade : null;
+  }
+
+  // Agendamento teleconsulta
+  const calLabel = document.getElementById('calMonthLabel').textContent || '';
+  let dataConsulta = null;
+  let horarioConsulta = null;
+  if (selectedDay && selectedTime && calLabel) {
+    dataConsulta = `${String(selectedDay).padStart(2,'0')} de ${calLabel}`;
+    horarioConsulta = selectedTime;
+  }
+
+  return {
+    nome:            (document.getElementById('nome').value || '').trim() || null,
+    cpf:             (document.getElementById('cpf').value || '').trim() || null,
+    telefone:        (document.getElementById('telefone').value || '').trim() || null,
+    email:           (document.getElementById('email').value || '').trim() || null,
+    data_nascimento: dataNascVal || null,
+    idade:           idadeNum,
+    cirurgia:        (document.getElementById('cirurgiaInput').value || '').trim() || null,
+    cirurgiao:       null,          // campo não presente no formulário atual; reservado para uso futuro
+    data_consulta:   dataConsulta,
+    horario_consulta: horarioConsulta,
+    status:          'pendente',
+  };
+}
+
+// ─── Mostrar estado na tela de conclusão ─────────────────
+function mostrarEstado(estado) {
+  document.getElementById('stateSaving').style.display = estado === 'saving'  ? 'block' : 'none';
+  document.getElementById('stateSuccess').style.display = estado === 'success' ? 'block' : 'none';
+  document.getElementById('stateError').style.display   = estado === 'error'   ? 'block' : 'none';
+}
+
+// ─── Função principal: navega e salva ────────────────────
+async function finalizarAvaliacao() {
+  // 1. Ir para a etapa 8 e mostrar spinner
+  goTo(7);
+  mostrarEstado('saving');
+
+  // 2. Coletar dados
+  const dados = coletarDados();
+
+  // 3. Gravar no Supabase
+  try {
+    const { error } = await _supabase
+      .from('pacientes')
+      .insert([dados]);
+
+    if (error) throw error;
+
+    // ✅ Sucesso
+    mostrarEstado('success');
+
+  } catch (err) {
+    // ❌ Erro amigável
+    console.error('Erro ao salvar no Supabase:', err);
+    const msg = err?.message || 'Erro desconhecido. Verifique sua conexão.';
+    document.getElementById('errorMsg').textContent = msg;
+    mostrarEstado('error');
+  }
+}
+
+// ─── Tentar novamente após erro ──────────────────────────
+function tentarNovamente() {
+  goTo(6); // Volta para teleconsulta para o paciente confirmar e refinalizar
+}
+
+
 // ─── Navegação ───────────────────────────────────────
 let currentStep=0, selectedDay=null, selectedTime=null, calYear, calMonth;
 const now=new Date(); calYear=now.getFullYear(); calMonth=now.getMonth();
