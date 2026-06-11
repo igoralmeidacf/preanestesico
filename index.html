@@ -183,19 +183,6 @@
   .error-box{background:var(--red-light);border:1px solid #F5C5C5;border-radius:var(--radius);padding:.875rem 1rem;font-size:13px;color:var(--red);line-height:1.5;margin:1rem auto;max-width:360px;text-align:left;display:flex;gap:8px;align-items:flex-start;}
   .error-box i{font-size:16px;flex-shrink:0;margin-top:1px;}
 
-
-  .alert-alergia{display:none;background:var(--red-light);border:1px solid #F5B6B6;border-radius:var(--radius);padding:.875rem 1rem;margin-top:10px;font-size:13px;color:var(--red);font-weight:600;line-height:1.5;gap:8px;align-items:flex-start;}
-  .alert-alergia.visible{display:flex;}
-  .upload-ok{display:flex;align-items:center;gap:8px;background:var(--green-light);border:1px solid #A8DBBF;border-radius:var(--radius-sm);padding:8px 10px;margin-top:8px;font-size:12px;color:#1A6B48;font-weight:600;}
-  .mets-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem;}
-  .mets-card{border:1px solid var(--border);border-radius:var(--radius);padding:12px;cursor:pointer;background:var(--surface);transition:all .15s;}
-  .mets-card:hover{border-color:var(--blue-mid);background:var(--blue-light);}
-  .mets-card.selected{border-color:var(--blue);background:var(--blue-light);}
-  .mets-card input{display:none;}
-  .mets-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
-  .mets-desc{font-size:12px;color:var(--text-2);line-height:1.35;}
-  @media(max-width:480px){.mets-grid{grid-template-columns:1fr;}}
-
   @media(max-width:480px){
     .score-grid{grid-template-columns:1fr 1fr;}
     .frag-grid{grid-template-columns:repeat(3,1fr);}
@@ -276,8 +263,6 @@
         <option value="outro">Outro</option>
       </select>
     </div>
-
-    <div class="field"><label>Hospital ou clínica onde será realizado o procedimento</label><input type="text" id="hospitalClinica" placeholder="Ex: Hospital Santa Helena, clínica, day hospital..."></div>
 
     <div class="field">
       <label>Cirurgia / procedimento agendado</label>
@@ -481,7 +466,6 @@
       <label class="cb-item"><input type="checkbox" value="alergOutros" onchange="updateCb(this);toggleOutros('alergOutrosWrap',this)"> Outro</label>
     </div>
     <div class="outros-wrap visible" id="alergOutrosWrap"><textarea placeholder="Descreva as alergias em detalhes..." id="alergOutrosText"></textarea></div>
-    <div class="alert-alergia" id="alergiaDestaque"><i class="ti ti-alert-triangle"></i><span>Atenção: alergia relatada. Esta informação será destacada no resumo para o anestesiologista.</span></div>
 
     <!-- HÁBITOS SOCIAIS -->
     <div class="section-label">Hábitos sociais</div>
@@ -521,9 +505,6 @@
       <div class="field"><label>Intercorrência anestésico-cirúrgica prévia</label>
         <select id="intercorrencia"><option value="nao">Não</option><option value="sim">Sim</option></select>
       </div>
-    </div>
-    <div class="field"><label>Possui histórico de via aérea difícil?</label>
-      <select id="vaDificil"><option value="nao">Não</option><option value="sim">Sim</option><option value="nao_sei">Não sei informar</option></select>
     </div>
 
     <div class="nav-row">
@@ -628,17 +609,14 @@
     </div>
     <div id="scoreContent"></div>
 
-    <div class="section-label">Capacidade funcional estimada (METs)</div>
-    <div class="mets-grid" id="metsGroup">
-      <label class="mets-card" onclick="selMets(this)"><input type="radio" name="mets" value="lt4" data-label="< 4 METs" data-risk="baixa">
-        <div class="mets-title">&lt; 4 METs — Baixa</div><div class="mets-desc">Não consegue subir 1 lance de escada ou caminhar duas quadras sem sintomas.</div></label>
-      <label class="mets-card" onclick="selMets(this)"><input type="radio" name="mets" value="4a6" data-label="4–6 METs" data-risk="moderada">
-        <div class="mets-title">4–6 METs — Moderada</div><div class="mets-desc">Consegue caminhar duas quadras, subir escadas leves ou realizar tarefas domésticas.</div></label>
-      <label class="mets-card" onclick="selMets(this)"><input type="radio" name="mets" value="7a10" data-label="7–10 METs" data-risk="boa">
-        <div class="mets-title">7–10 METs — Boa</div><div class="mets-desc">Consegue subir dois lances de escada, caminhar rápido ou fazer esforço moderado.</div></label>
-      <label class="mets-card" onclick="selMets(this)"><input type="radio" name="mets" value="gt10" data-label="> 10 METs" data-risk="excelente">
-        <div class="mets-title">&gt; 10 METs — Excelente</div><div class="mets-desc">Corre, nada, pratica esportes ou atividade física vigorosa regularmente.</div></label>
+    <div class="section-label">Via aérea</div>
+    <div class="row">
+      <div class="field"><label>Distância esterno-mento (cm)</label><input type="number" step="0.5" placeholder="ex: 6.5" id="distMento"></div>
+      <div class="field"><label>Via aérea difícil prévia</label>
+        <select id="vaDificil"><option value="nao">Não</option><option value="sim">Sim</option></select>
+      </div>
     </div>
+    <div class="field"><label>Dentição / Prognatismo</label><input type="text" id="denticao" placeholder="Observações"></div>
 
     <div class="section-label">Escala de fragilidade clínica</div>
     <div class="frag-grid" id="fragGroup">
@@ -815,8 +793,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getFirestore, collection, addDoc, serverTimestamp }
   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { getStorage, ref, uploadBytes, getDownloadURL }
-  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyB8xxxyM7uwGTyvgqjQlZVIAic6Uc4Me0g",
@@ -829,7 +805,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
-const storage = getStorage(app);
 let ultimaAvaliacaoSalva = null;
 let ultimoDocumentoId = null;
 
@@ -913,7 +888,6 @@ function coletarDados() {
       idade: idadeNum,
       sexo: seletor('sexo'),
       operadora: seletor('operadora'),
-      hospital_clinica: texto('hospitalClinica'),
       cirurgia: texto('cirurgiaInput'),
       codigo_tuss: selectedTussCode || null,
       cirurgiao: texto('cirurgiao'),
@@ -979,8 +953,9 @@ function coletarDados() {
       outros_arquivos: arquivoNomes('outrosFile')
     },
     via_aerea_escores: {
+      dist_mento_cm: numero('distMento'),
       via_aerea_dificil_previa: seletor('vaDificil'),
-      capacidade_funcional_mets: (() => { const m=document.querySelector('input[name=mets]:checked'); return m ? { valor:m.value, faixa:m.dataset.label, classificacao:m.dataset.risk } : null; })(),
+      denticao_prognatismo: texto('denticao'),
       fragilidade_clinica: fragilidade,
       lee_rcri: { score: lee.score, classificacao: lee.label },
       apfel_nvpo: { score: apfel.score, risco: apfel.label },
@@ -999,8 +974,6 @@ function coletarDados() {
     }
   };
 
-  dados.resumo_inteligente = gerarResumoInteligente(dados);
-
   // Campos espelhados para facilitar busca/listagem no Firestore.
   return {
     nome: dados.identificacao.nome,
@@ -1010,13 +983,11 @@ function coletarDados() {
     data_nascimento: dados.identificacao.data_nascimento,
     idade: dados.identificacao.idade,
     cirurgia: dados.identificacao.cirurgia,
-    hospital_clinica: dados.identificacao.hospital_clinica,
     codigo_tuss: dados.identificacao.codigo_tuss,
     cirurgiao: dados.identificacao.cirurgiao,
     data_consulta: dados.teleconsulta.data_consulta,
     horario_consulta: dados.teleconsulta.horario_consulta,
     status: dados.status,
-    resumo_inteligente: dados.resumo_inteligente,
     avaliacao_completa: dados
   };
 }
@@ -1028,46 +999,10 @@ function mostrarEstado(estado) {
   document.getElementById('stateError').style.display   = estado === 'error'   ? 'block' : 'none';
 }
 
-// ─── Upload real de arquivos para Firebase Storage ─────────
-async function uploadArquivos(inputId, pasta, prefixo) {
-  const input = document.getElementById(inputId);
-  if (!input?.files || !input.files.length) return [];
-  const uploads = [];
-  for (const file of input.files) {
-    const nomeSeguro = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const caminho = `${pasta}/${prefixo}_${Date.now()}_${nomeSeguro}`;
-    const storageRef = ref(storage, caminho);
-    const snap = await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(snap.ref);
-    uploads.push({ nome: file.name, caminho, url, tipo: file.type || null, tamanho_bytes: file.size || null });
-  }
-  return uploads;
-}
-
-async function anexarUploadsFirebase(dados) {
-  const cpf = (dados?.cpf || 'sem_cpf').replace(/\D/g,'') || 'sem_cpf';
-  const pasta = `avaliacoes/${cpf}/${Date.now()}`;
-  try {
-    const lab = await uploadArquivos('labFile', pasta, 'laboratorial');
-    const ecg = await uploadArquivos('ecgFile', pasta, 'ecg');
-    const outros = await uploadArquivos('outrosFile', pasta, 'outros');
-    dados.avaliacao_completa.exames.uploads_laboratoriais = lab;
-    dados.avaliacao_completa.exames.uploads_ecg = ecg;
-    dados.avaliacao_completa.exames.uploads_outros = outros;
-    dados.uploads_exames = { laboratoriais: lab, ecg, outros };
-  } catch (err) {
-    console.warn('Upload para Firebase Storage não concluído:', err);
-    dados.avaliacao_completa.exames.erro_upload = err?.message || 'Falha no upload dos arquivos';
-    dados.uploads_exames = { erro: dados.avaliacao_completa.exames.erro_upload };
-  }
-  return dados;
-}
-
 // ─── Gravar no Firestore (Firebase Web SDK) ───────────────
 async function gravarNoFirebase(dados) {
-  const dadosComUploads = await anexarUploadsFirebase(dados);
   const docRef = await addDoc(collection(db, 'pacientes'), {
-    ...dadosComUploads,
+    ...dados,
     criadoEm: serverTimestamp(),
   });
   return docRef.id;
@@ -1211,14 +1146,6 @@ function updateCb(input){
   const item=input.closest('.cb-item');
   if(input.checked) item.classList.add('checked');
   else item.classList.remove('checked');
-  atualizarDestaqueAlergia();
-}
-function atualizarDestaqueAlergia(){
-  const box=document.getElementById('alergiaDestaque');
-  const grp=document.getElementById('grp-alerg');
-  if(!box || !grp) return;
-  const temAlergia = Array.from(grp.querySelectorAll('input[type=checkbox]:checked')).some(cb => cb.value !== 'alerg-none');
-  box.classList.toggle('visible', temAlergia);
 }
 
 // ─── "Sem doenças neste sistema" ─────────────────────
@@ -1243,7 +1170,6 @@ function toggleNone(grpId, noneLabel){
     noneLabel.classList.remove('checked');
     grp.classList.remove('group-disabled');
   }
-  atualizarDestaqueAlergia();
 }
 
 function toggleOutros(wrapId,input){
@@ -1263,12 +1189,6 @@ function toggleConsent(){
 function selFrag(card){
   document.querySelectorAll('.frag-card').forEach(c=>c.classList.remove('selected'));
   card.classList.add('selected');
-}
-function selMets(card){
-  document.querySelectorAll('.mets-card').forEach(c=>c.classList.remove('selected'));
-  card.classList.add('selected');
-  const input=card.querySelector('input[type=radio]');
-  if(input) input.checked=true;
 }
 
 // ─── Alerta medicamentos ─────────────────────────────
@@ -1306,7 +1226,7 @@ function handleUploadSimples(inputId,previewId){
   const files=document.getElementById(inputId).files;
   if(!files.length) return;
   const preview=document.getElementById(previewId);
-  preview.innerHTML=`<div class="upload-ok"><i class="ti ti-circle-check"></i> ${files.length} arquivo(s) recebido(s) com sucesso.</div>`;
+  preview.innerHTML='';
   for(const f of files) preview.innerHTML+=`<div class="file-preview"><i class="ti ti-file-check"></i> ${f.name}</div>`;
 }
 
@@ -1400,96 +1320,44 @@ function selectTime(t,d){
 // ─── Resumo e PDF ──────────────────────────────────────
 function formatarValor(v){
   if (v === null || v === undefined || v === '') return 'Não informado';
-  if (Array.isArray(v)) return v.length ? v.map(item => typeof item === 'object' ? (item.texto || item.nome || JSON.stringify(item)) : item).join(', ') : 'Não informado';
+  if (Array.isArray(v)) return v.length ? v.map(item => typeof item === 'object' ? (item.texto || JSON.stringify(item)) : item).join(', ') : 'Não informado';
   if (typeof v === 'object') return JSON.stringify(v, null, 2);
   return String(v);
 }
+function linha(label, value){
+  return `<tr><th>${label}</th><td>${formatarValor(value)}</td></tr>`;
+}
 function listaChecks(arr){
-  if (!arr || !arr.length) return '';
-  return arr.map(x => x.texto || x.valor || x).filter(Boolean).join(', ');
+  if (!arr || !arr.length) return 'Não informado';
+  return arr.map(x => x.texto || x.valor || x).join(', ');
 }
-function temValor(v){
-  if (v === null || v === undefined || v === '') return false;
-  if (Array.isArray(v)) return v.length > 0;
-  if (typeof v === 'object') return Object.values(v).some(temValor);
-  return true;
-}
-function linhaCompacta(label, value){
-  if(!temValor(value)) return '';
-  return `<div class="kv"><b>${label}</b><span>${formatarValor(value)}</span></div>`;
-}
-function secaoCompacta(titulo, conteudo){
-  const c = Array.isArray(conteudo) ? conteudo.filter(Boolean).join('') : conteudo;
-  return c ? `<section><h2>${titulo}</h2>${c}</section>` : '';
-}
-function gerarResumoInteligente(d){
-  const id=d.identificacao||{}, ant=d.antropometria||{}, hist=d.historico_clinico||{}, ex=d.exames||{}, ve=d.via_aerea_escores||{}, tel=d.teleconsulta||{};
-  const partes=[];
-  partes.push(`Paciente ${id.nome || 'não identificado'}${id.idade ? ', '+id.idade+' anos' : ''}${ant.imc ? ', IMC '+ant.imc+' kg/m²' : ''}${ant.classificacao_imc ? ' ('+ant.classificacao_imc+')' : ''}.`);
-  if(id.cirurgia) partes.push(`Procedimento previsto: ${id.cirurgia}${id.hospital_clinica ? ' em '+id.hospital_clinica : ''}${id.cirurgiao ? ', cirurgião responsável '+id.cirurgiao : ''}.`);
-  if(ve.capacidade_funcional_mets?.faixa) partes.push(`Capacidade funcional estimada: ${ve.capacidade_funcional_mets.faixa} (${ve.capacidade_funcional_mets.classificacao}).`);
-  const alergias = listaChecks(hist.alergias);
-  if(alergias && !/não possuo/i.test(alergias)) partes.push(`Atenção: alergia relatada — ${alergias}${hist.alergias_descricao ? ' ('+hist.alergias_descricao+')' : ''}.`);
-  else partes.push('Sem alergias relevantes informadas no formulário.');
-  if(hist.medicamentos_em_uso) partes.push(`Medicamentos em uso: ${hist.medicamentos_em_uso}.`);
-  if(hist.alertas_medicamentos?.length) partes.push(`Alertas de suspensão: ${hist.alertas_medicamentos.map(a=>a.medicamento).join(', ')}.`);
-  if(ve.via_aerea_dificil_previa === 'sim') partes.push('Histórico de via aérea difícil informado.');
-  const anexos=[];
-  if(ex.arquivos_laboratoriais?.length) anexos.push('laboratoriais');
-  if(ex.arquivo_ecg?.length) anexos.push('ECG');
-  if(ex.outros_arquivos?.length) anexos.push('outros documentos');
-  if(anexos.length) partes.push(`Exames/documentos anexados: ${anexos.join(', ')}.`);
-  if(ve.lee_rcri||ve.apfel_nvpo||ve.asa) partes.push(`Escores: Lee/RCRI ${ve.lee_rcri?.score ?? '—'} (${ve.lee_rcri?.classificacao || '—'}), Apfel ${ve.apfel_nvpo?.score ?? '—'} (${ve.apfel_nvpo?.risco || '—'}), ASA preliminar ${ve.asa?.score ?? '—'} (${ve.asa?.classificacao || '—'}).`);
-  if(tel.data_consulta || tel.horario_consulta) partes.push(`Teleconsulta selecionada: ${tel.data_consulta || 'data não informada'} às ${tel.horario_consulta || 'horário não informado'}.`);
-  partes.push('Resumo automático para triagem, sujeito à revisão e validação do anestesiologista.');
-  return partes.join(' ');
-}
-function gerarAlertasHtml(d){
-  const hist=d.historico_clinico||{}, ve=d.via_aerea_escores||{};
-  const alertas=[];
-  const alergias = listaChecks(hist.alergias);
-  if(alergias && !/não possuo/i.test(alergias)) alertas.push('ALERGIA RELATADA');
-  if(ve.via_aerea_dificil_previa === 'sim') alertas.push('Histórico de via aérea difícil');
-  if((listaChecks(hist.respiratorio)||'').toLowerCase().includes('apneia')) alertas.push('Apneia do sono');
-  if(hist.alertas_medicamentos?.length) alertas.push('Medicamento com orientação de suspensão');
-  if(ve.capacidade_funcional_mets?.valor === 'lt4') alertas.push('Capacidade funcional < 4 METs');
-  if(!alertas.length) return '';
-  return `<div class="alerts">${alertas.map(a=>`<span>⚠️ ${a}</span>`).join('')}</div>`;
-}
-function examesTabela(ex){
-  const rows=[
-    ['Hb', ex.hemoglobina], ['Ht', ex.hematocrito], ['Leuco', ex.leucocitos], ['Plaquetas', ex.plaquetas],
-    ['Glicemia', ex.glicemia], ['Cr', ex.creatinina], ['Ureia', ex.ureia], ['Na', ex.sodio], ['K', ex.potassio], ['INR', ex.inr], ['TTPA', ex.ttpa], ['β-HCG', ex.beta_hcg]
-  ].filter(r=>temValor(r[1])).map(r=>`<tr><th>${r[0]}</th><td>${formatarValor(r[1])}</td></tr>`).join('');
-  return rows ? `<table class="mini">${rows}</table>` : '';
+function criarSecao(titulo, rows){
+  return `<h2>${titulo}</h2><table>${rows.join('')}</table>`;
 }
 function gerarResumoHtml(dadosWrapper){
   const d = dadosWrapper?.avaliacao_completa || coletarDados().avaliacao_completa;
   const id = d.identificacao || {}, ant = d.antropometria || {}, hist = d.historico_clinico || {}, ex = d.exames || {}, ve = d.via_aerea_escores || {}, cons = d.consentimento || {}, tel = d.teleconsulta || {};
-  const resumo = gerarResumoInteligente(d);
-  const medAlertas = (hist.alertas_medicamentos || []).map(a => `${a.medicamento}: ${a.orientacao}`).join('<br>');
+  const alertas = (hist.alertas_medicamentos || []).map(a => `${a.medicamento}: ${a.orientacao}`).join('<br>') || 'Sem alertas automáticos identificados';
   return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Resumo Pré-Anestésico</title>
   <style>
-    *{box-sizing:border-box} body{font-family:Arial,sans-serif;color:#1A1D23;padding:18px;line-height:1.28;font-size:11px} h1{font-size:18px;margin:0;color:#1A5FA8} h2{font-size:12px;margin:10px 0 6px;color:#1A5FA8;border-bottom:1px solid #dbe3ef;padding-bottom:3px}.muted{color:#666;font-size:10px;margin-top:2px}.header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:10px}.print-btn{position:fixed;right:20px;top:20px;background:#1A5FA8;color:#fff;border:0;border-radius:8px;padding:10px 14px;cursor:pointer}.summary{border:1px solid #b9d0ea;background:#eef6ff;border-radius:8px;padding:9px;margin:10px 0;font-size:11.5px}.alerts{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}.alerts span{background:#FCEAEA;color:#B83030;border:1px solid #f3b7b7;border-radius:999px;padding:3px 7px;font-weight:bold;font-size:10px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}.kv{display:flex;border-bottom:1px solid #edf0f4;padding:3px 0;gap:6px}.kv b{min-width:100px;color:#5A6072}.kv span{flex:1}.mini{width:100%;border-collapse:collapse}.mini th,.mini td{border:1px solid #e5e7eb;padding:4px 6px;text-align:left}.mini th{background:#f7f8fa;width:28%}.footer{margin-top:12px;color:#666;font-size:10px;border-top:1px solid #ddd;padding-top:6px}@media print{.print-btn{display:none} body{padding:0;font-size:10px}.summary{font-size:10.5px}.grid{gap:6px 10px} h2{break-after:avoid} section{break-inside:avoid}}
+    body{font-family:Arial,sans-serif;color:#1A1D23;padding:24px;line-height:1.45} h1{font-size:22px;margin-bottom:4px;color:#1A5FA8} h2{font-size:15px;margin-top:22px;padding-bottom:6px;border-bottom:1px solid #ddd;color:#1A5FA8} table{width:100%;border-collapse:collapse;margin-top:8px} th,td{border:1px solid #e5e7eb;padding:7px 9px;vertical-align:top;font-size:12px} th{width:34%;background:#f7f8fa;text-align:left}.muted{color:#666;font-size:12px}.print-btn{position:fixed;right:20px;top:20px;background:#1A5FA8;color:#fff;border:0;border-radius:8px;padding:10px 14px;cursor:pointer}@media print{.print-btn{display:none} body{padding:0}}
   </style></head><body><button class="print-btn" onclick="window.print()">Imprimir / Salvar PDF</button>
-  <div class="header"><div><h1>Resumo Pré-Anestésico</h1><div class="muted">Lagos Anestesia · Documento automático para revisão médica</div></div><div class="muted">Status: ${formatarValor(d.status)}<br>Gerado em: ${new Date().toLocaleString('pt-BR')}</div></div>
-  <div class="summary"><strong>Resumo clínico automatizado:</strong><br>${resumo}</div>
-  ${gerarAlertasHtml(d)}
-  <div class="grid">
-    ${secaoCompacta('Identificação / Procedimento', [
-      linhaCompacta('Nome', id.nome), linhaCompacta('CPF', id.cpf), linhaCompacta('Idade', id.idade), linhaCompacta('Telefone', id.telefone), linhaCompacta('E-mail', id.email), linhaCompacta('Hospital', id.hospital_clinica), linhaCompacta('Procedimento', id.cirurgia), linhaCompacta('TUSS', id.codigo_tuss), linhaCompacta('Cirurgião', id.cirurgiao), linhaCompacta('Diagnóstico', id.diagnostico)
-    ])}
-    ${secaoCompacta('Antropometria / Risco', [
-      linhaCompacta('Peso/Altura', (ant.peso_kg||ant.altura_cm)?`${formatarValor(ant.peso_kg)} kg / ${formatarValor(ant.altura_cm)} cm`:null), linhaCompacta('IMC', ant.imc ? `${ant.imc} — ${formatarValor(ant.classificacao_imc)}` : null), linhaCompacta('METs', ve.capacidade_funcional_mets ? `${ve.capacidade_funcional_mets.faixa} — ${ve.capacidade_funcional_mets.classificacao}` : null), linhaCompacta('Lee/RCRI', ve.lee_rcri ? `${ve.lee_rcri.score} — ${ve.lee_rcri.classificacao}` : null), linhaCompacta('Apfel', ve.apfel_nvpo ? `${ve.apfel_nvpo.score} — ${ve.apfel_nvpo.risco}` : null), linhaCompacta('ASA preliminar', ve.asa ? `${ve.asa.score} — ${ve.asa.classificacao}` : null), linhaCompacta('Fragilidade', ve.fragilidade_clinica)
-    ])}
-  </div>
-  ${secaoCompacta('Histórico clínico relevante', [
-    linhaCompacta('Cardiovascular', listaChecks(hist.cardiovascular)), linhaCompacta('Respiratório', listaChecks(hist.respiratorio)), linhaCompacta('Endócrino/metabólico', listaChecks(hist.endocrino_metabolico)), linhaCompacta('Neurológico', listaChecks(hist.neurologico)), linhaCompacta('Renal/Hepático', [listaChecks(hist.renal), listaChecks(hist.hepatico)].filter(Boolean).join(' · ')), linhaCompacta('Hematológico', listaChecks(hist.hematologico)), linhaCompacta('Gastrointestinal', listaChecks(hist.gastrointestinal)), linhaCompacta('Psíquico/músculo/infeccioso', [listaChecks(hist.psiquiatrico), listaChecks(hist.musculo_esqueletico), listaChecks(hist.infeccioso)].filter(Boolean).join(' · ')), linhaCompacta('Alergias', listaChecks(hist.alergias)), linhaCompacta('Descrição alergias', hist.alergias_descricao), linhaCompacta('Hábitos', listaChecks(hist.habitos)), linhaCompacta('Gestação', hist.gravidez==='sim' ? `Sim, ${formatarValor(hist.idade_gestacional_semanas)} semanas` : null), linhaCompacta('Cirurgias/anestesias prévias', hist.cirurgias_anestesias_previas), linhaCompacta('Intercorrência anestésica', hist.intercorrencia_anestesico_cirurgica_previa), linhaCompacta('Via aérea difícil', ve.via_aerea_dificil_previa)
+  <h1>Resumo da Avaliação Pré-Anestésica</h1><div class="muted">Lagos Anestesia · Documento gerado automaticamente pelo portal</div>
+  ${criarSecao('Identificação e cirurgia', [
+    linha('Nome', id.nome), linha('CPF', id.cpf), linha('Telefone', id.telefone), linha('E-mail', id.email), linha('Data de nascimento', id.data_nascimento), linha('Idade', id.idade), linha('Sexo', id.sexo), linha('Operadora', id.operadora), linha('Procedimento', id.cirurgia), linha('Código TUSS', id.codigo_tuss), linha('Cirurgião', id.cirurgiao), linha('Diagnóstico', id.diagnostico)
   ])}
-  ${secaoCompacta('Medicamentos e alertas', [linhaCompacta('Medicamentos em uso', hist.medicamentos_em_uso), linhaCompacta('Alertas de suspensão', medAlertas)])}
-  ${secaoCompacta('Exames', [examesTabela(ex), linhaCompacta('Arquivos laboratoriais', ex.arquivos_laboratoriais), linhaCompacta('ECG', ex.arquivo_ecg), linhaCompacta('Outros anexos', ex.outros_arquivos), linhaCompacta('Observações', ex.outros_exames)])}
-  ${secaoCompacta('Consentimento / Teleconsulta', [linhaCompacta('Assinatura', cons.assinatura_nome), linhaCompacta('Aceite', cons.aceite ? 'Sim' : 'Não'), linhaCompacta('Data da teleconsulta', tel.data_consulta), linhaCompacta('Horário', tel.horario_consulta)])}
-  <div class="footer">Conclusão automática: avaliação eletrônica concluída. Informações e anexos devem ser revisados pelo médico anestesiologista antes da definição do plano anestésico e liberação do procedimento.</div>
+  ${criarSecao('Antropometria', [linha('Peso', ant.peso_kg), linha('Altura', ant.altura_cm), linha('IMC', ant.imc), linha('Classificação IMC', ant.classificacao_imc)])}
+  ${criarSecao('Histórico clínico', [
+    linha('Cardiovascular', listaChecks(hist.cardiovascular)), linha('Cardiovascular - outros', hist.cardiovascular_outros), linha('Respiratório', listaChecks(hist.respiratorio)), linha('Respiratório - outros', hist.respiratorio_outros), linha('Endócrino/metabólico', listaChecks(hist.endocrino_metabolico)), linha('Endócrino/metabólico - outros', hist.endocrino_metabolico_outros), linha('Neurológico', listaChecks(hist.neurologico)), linha('Neurológico - outros', hist.neurologico_outros), linha('Renal', listaChecks(hist.renal)), linha('Renal - outros', hist.renal_outros), linha('Hepático', listaChecks(hist.hepatico)), linha('Hepático - outros', hist.hepatico_outros), linha('Hematológico', listaChecks(hist.hematologico)), linha('Hematológico - outros', hist.hematologico_outros), linha('Gastrointestinal', listaChecks(hist.gastrointestinal)), linha('Gastrointestinal - outros', hist.gastrointestinal_outros), linha('Psiquiátrico', listaChecks(hist.psiquiatrico)), linha('Psiquiátrico - outros', hist.psiquiatrico_outros), linha('Músculo-esquelético', listaChecks(hist.musculo_esqueletico)), linha('Músculo-esquelético - outros', hist.musculo_esqueletico_outros), linha('Infeccioso', listaChecks(hist.infeccioso)), linha('Infeccioso - outros', hist.infeccioso_outros), linha('Alergias', listaChecks(hist.alergias)), linha('Descrição das alergias', hist.alergias_descricao), linha('Hábitos', listaChecks(hist.habitos)), linha('Drogas - descrição', hist.drogas_descricao), linha('Gravidez', hist.gravidez), linha('Idade gestacional', hist.idade_gestacional_semanas), linha('Cirurgias/anestesias prévias', hist.cirurgias_anestesias_previas), linha('Medicamentos em uso', hist.medicamentos_em_uso), linha('Alertas de medicamentos', alertas), linha('Histórico familiar anestesia', hist.historico_familiar_anestesia), linha('Intercorrência anestésico-cirúrgica prévia', hist.intercorrencia_anestesico_cirurgica_previa)
+  ])}
+  ${criarSecao('Exames complementares', [
+    linha('Arquivos laboratoriais', ex.arquivos_laboratoriais), linha('Hemoglobina', ex.hemoglobina), linha('Hematócrito', ex.hematocrito), linha('Leucócitos', ex.leucocitos), linha('Plaquetas', ex.plaquetas), linha('Glicemia', ex.glicemia), linha('Creatinina', ex.creatinina), linha('Ureia', ex.ureia), linha('Sódio', ex.sodio), linha('Potássio', ex.potassio), linha('INR', ex.inr), linha('TTPA', ex.ttpa), linha('Beta-HCG', ex.beta_hcg), linha('Outros exames', ex.outros_exames), linha('Arquivo ECG', ex.arquivo_ecg), linha('Outros arquivos', ex.outros_arquivos)
+  ])}
+  ${criarSecao('Via aérea e escores', [
+    linha('Distância esterno-mento', ve.dist_mento_cm), linha('Via aérea difícil prévia', ve.via_aerea_dificil_previa), linha('Dentição/prognatismo', ve.denticao_prognatismo), linha('Fragilidade clínica', ve.fragilidade_clinica), linha('Lee/RCRI', ve.lee_rcri ? `${ve.lee_rcri.score} — ${ve.lee_rcri.classificacao}` : null), linha('Apfel/NVPO', ve.apfel_nvpo ? `${ve.apfel_nvpo.score} — ${ve.apfel_nvpo.risco}` : null), linha('ASA', ve.asa ? `${ve.asa.score} — ${ve.asa.classificacao}` : null)
+  ])}
+  ${criarSecao('Consentimento', [linha('Nome assinado', cons.assinatura_nome), linha('Documento', cons.documento), linha('Parentesco', cons.parentesco), linha('Aceite do termo', cons.aceite ? 'Sim' : 'Não')])}
+  ${criarSecao('Teleconsulta', [linha('Data', tel.data_consulta), linha('Horário', tel.horario_consulta)])}
   </body></html>`;
 }
 function abrirResumoAvaliacao(){
@@ -1519,7 +1387,6 @@ window.toggleNone = toggleNone;
 window.toggleOutros = toggleOutros;
 window.toggleConsent = toggleConsent;
 window.selFrag = selFrag;
-window.selMets = selMets;
 window.checkMedAlerts = checkMedAlerts;
 window.handleUploadSimples = handleUploadSimples;
 window.changeMonth = changeMonth;
