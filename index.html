@@ -347,35 +347,57 @@
     <div class="step-header">
       <div class="step-eyebrow">Etapa 4 de 8</div>
       <div class="step-title">Exames complementares</div>
-      <div class="step-sub">Fotografe ou envie os arquivos dos seus exames. O anestesiologista analisará antes da consulta.</div>
+      <div class="step-sub">Fotografe ou selecione as imagens dos seus exames. Pode adicionar várias fotos em cada categoria.</div>
     </div>
+
     <div class="section-label">Exames laboratoriais</div>
-    <label class="upload-zone" onclick="document.getElementById('labFile').click()">
+    <div class="upload-zone" onclick="document.getElementById('labFile').click()" style="cursor:pointer;">
       <i class="ti ti-flask"></i>
       <p>Hemograma, bioquímica, coagulação...</p>
-      <div class="hint">Toque para fotografar ou selecionar (múltiplos arquivos permitidos)</div>
-      <input type="file" id="labFile" accept="image/*,.pdf" multiple capture="environment" onchange="handleUpload('labFile','labPreview','labThumbs')">
-    </label>
+      <div class="hint">Toque para selecionar — pode selecionar várias fotos de uma vez</div>
+    </div>
+    <input type="file" id="labFile" accept="image/*" multiple style="display:none;" onchange="adicionarFotos('lab',this)">
     <div id="labPreview"></div>
     <div class="img-thumb-grid" id="labThumbs"></div>
+    <div id="labAddBtn" style="display:none;margin-top:6px;">
+      <button type="button" class="btn-sm" onclick="document.getElementById('labFile2').click()">
+        <i class="ti ti-plus"></i> Adicionar mais fotos
+      </button>
+      <input type="file" id="labFile2" accept="image/*" multiple style="display:none;" onchange="adicionarFotos('lab',this)">
+    </div>
+
     <div class="section-label">Eletrocardiograma (ECG)</div>
-    <label class="upload-zone" onclick="document.getElementById('ecgFile').click()">
+    <div class="upload-zone" onclick="document.getElementById('ecgFile').click()" style="cursor:pointer;">
       <i class="ti ti-activity"></i>
       <p>Resultado mais recente do ECG</p>
-      <div class="hint">Toque para fotografar ou selecionar</div>
-      <input type="file" id="ecgFile" accept="image/*,.pdf" capture="environment" onchange="handleUpload('ecgFile','ecgPreview','ecgThumbs')">
-    </label>
+      <div class="hint">Toque para selecionar a foto do ECG</div>
+    </div>
+    <input type="file" id="ecgFile" accept="image/*" multiple style="display:none;" onchange="adicionarFotos('ecg',this)">
     <div id="ecgPreview"></div>
     <div class="img-thumb-grid" id="ecgThumbs"></div>
+    <div id="ecgAddBtn" style="display:none;margin-top:6px;">
+      <button type="button" class="btn-sm" onclick="document.getElementById('ecgFile2').click()">
+        <i class="ti ti-plus"></i> Adicionar mais fotos
+      </button>
+      <input type="file" id="ecgFile2" accept="image/*" multiple style="display:none;" onchange="adicionarFotos('ecg',this)">
+    </div>
+
     <div class="section-label">Outros exames e documentos</div>
-    <label class="upload-zone" onclick="document.getElementById('outrosFile').click()">
+    <div class="upload-zone" onclick="document.getElementById('outrosFile').click()" style="cursor:pointer;">
       <i class="ti ti-paperclip"></i>
       <p>Ecocardiograma, espirometria, imagens, laudos...</p>
-      <div class="hint">Toque para fotografar ou selecionar (múltiplos arquivos permitidos)</div>
-      <input type="file" id="outrosFile" accept="image/*,.pdf" multiple capture="environment" onchange="handleUpload('outrosFile','outrosPreview','outrosThumbs')">
-    </label>
+      <div class="hint">Toque para selecionar — pode selecionar várias fotos</div>
+    </div>
+    <input type="file" id="outrosFile" accept="image/*" multiple style="display:none;" onchange="adicionarFotos('outros',this)">
     <div id="outrosPreview"></div>
     <div class="img-thumb-grid" id="outrosThumbs"></div>
+    <div id="outrosAddBtn" style="display:none;margin-top:6px;">
+      <button type="button" class="btn-sm" onclick="document.getElementById('outrosFile2').click()">
+        <i class="ti ti-plus"></i> Adicionar mais fotos
+      </button>
+      <input type="file" id="outrosFile2" accept="image/*" multiple style="display:none;" onchange="adicionarFotos('outros',this)">
+    </div>
+
     <div class="nav-row">
       <button class="btn-back" onclick="goTo(2)"><i class="ti ti-arrow-left"></i></button>
       <button class="btn-next" onclick="goTo(4)">Continuar <i class="ti ti-arrow-right"></i></button>
@@ -719,36 +741,35 @@ async function fileToJpegBase64(file){
   });
 }
 
-window.handleUpload = async function(inputId, previewId, thumbsId){
-  const files=document.getElementById(inputId).files;
+// ─── Upload — acumula fotos sem apagar as anteriores ─────
+window.adicionarFotos = async function(categoria, input){
+  const files = Array.from(input.files);
   if(!files.length) return;
-  const preview=document.getElementById(previewId);
-  const thumbsEl=document.getElementById(thumbsId);
-  const categoria=inputId==="labFile"?"lab":inputId==="ecgFile"?"ecg":"outros";
-  uploadedImages[categoria]=[];
-  thumbsEl.innerHTML="";
-  preview.innerHTML=`<div class="upload-ok"><i class="ti ti-loader-2"></i> Processando ${files.length} arquivo(s)... aguarde.</div>`;
 
-  for(const file of Array.from(files)){
-    if(file.type.startsWith("image/")||file.name.toLowerCase().match(/\.(jpg|jpeg|png|heic|heif|webp)$/)){
-      const dataUrl=await fileToJpegBase64(file);
-      if(dataUrl){
-        uploadedImages[categoria].push({name:file.name,data:dataUrl});
-        const img=document.createElement("img");
-        img.src=dataUrl;
-        img.className="img-thumb";
-        img.alt=file.name;
-        thumbsEl.appendChild(img);
-      }
-    } else {
-      uploadedImages[categoria].push({name:file.name,data:null,isPdf:true});
+  const previewId = categoria+'Preview';
+  const thumbsId = categoria+'Thumbs';
+  const addBtnId = categoria+'AddBtn';
+  const preview = document.getElementById(previewId);
+  const thumbsEl = document.getElementById(thumbsId);
+
+  preview.innerHTML = `<div class="upload-ok"><i class="ti ti-loader-2"></i> Processando ${files.length} foto(s)... aguarde.</div>`;
+
+  for(const file of files){
+    const dataUrl = await fileToJpegBase64(file);
+    if(dataUrl){
+      uploadedImages[categoria].push({name: file.name, data: dataUrl});
+      const img = document.createElement('img');
+      img.src = dataUrl;
+      img.className = 'img-thumb';
+      img.alt = file.name;
+      thumbsEl.appendChild(img);
     }
   }
-  const total=uploadedImages[categoria].filter(i=>i.data).length;
-  preview.innerHTML=`<div class="upload-ok"><i class="ti ti-circle-check"></i> ${total} imagem(ns) processada(s) e pronta(s) para o PDF.</div>`;
-  Array.from(files).forEach(f=>{
-    preview.innerHTML+=`<div class="file-preview"><i class="ti ti-file-check"></i> ${f.name}</div>`;
-  });
+
+  const total = uploadedImages[categoria].length;
+  preview.innerHTML = `<div class="upload-ok"><i class="ti ti-circle-check"></i> ${total} foto(s) adicionada(s) — prontas para o PDF.</div>`;
+  document.getElementById(addBtnId).style.display = 'block';
+  input.value = '';
 };
 
 // ─── Calendário ──────────────────────────────────────────
