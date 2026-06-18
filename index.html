@@ -963,22 +963,32 @@ function coletarDados(){
   };
 }
 
+function dataUrlToBlob(dataUrl){
+  const [header, base64] = dataUrl.split(',');
+  const mimeMatch = header.match(/data:(.*?);/);
+  const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+  return new Blob([bytes], {type: mime});
+}
+
 async function uploadEGravar(dados){
   const cpf=(dados.cpf||"sem_cpf").replace(/\D/g,"")||"sem_cpf";
   const pasta=`avaliacoes/${cpf}/${Date.now()}`;
   const uploads={lab:[],ecg:[],outros:[]};
   for(const [cat,imgs] of Object.entries(uploadedImages)){
     for(const img of imgs){
-      const inputId=cat==="lab"?"labFile":cat==="ecg"?"ecgFile":"outrosFile";
-      const input=document.getElementById(inputId);
-      if(!input?.files) continue;
-      for(const file of Array.from(input.files)){
-        if(file.name===img.name){
-          const storageRef=ref(storage,`${pasta}/${cat}_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`);
-          const snap=await uploadBytes(storageRef,file);
-          const url=await getDownloadURL(snap.ref);
-          uploads[cat].push({nome:file.name,url,tipo:file.type});
-        }
+      if(!img.data) continue;
+      try{
+        const blob = dataUrlToBlob(img.data);
+        const nomeArquivo = (img.name||'foto.jpg').replace(/[^a-zA-Z0-9._-]/g,"_");
+        const storageRef=ref(storage,`${pasta}/${cat}_${Date.now()}_${nomeArquivo}`);
+        const snap=await uploadBytes(storageRef,blob);
+        const url=await getDownloadURL(snap.ref);
+        uploads[cat].push({nome:img.name,url,tipo:blob.type});
+      }catch(e){
+        console.warn('Erro ao enviar imagem', img.name, e);
       }
     }
   }
