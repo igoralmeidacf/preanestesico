@@ -9,7 +9,6 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://accounts.google.com/gsi/client" async></script>
 <style>
   :root {
     --blue:#3288C5; --blue-light:#E8F1FB; --blue-mid:#3478C8;
@@ -918,93 +917,6 @@ function renderScores(){
     </div>`;
 }
 
-// ─── Google Calendar OAuth2 ───────────────────────────────
-const GCAL_CLIENT_ID = '194425181801-qjp31tifsa62ab5n02vp28cu46ejn17b.apps.googleusercontent.com';
-const GCAL_SCOPE = 'https://www.googleapis.com/auth/calendar.events';
-let tokenClient = null;
-let gcalAccessToken = null;
-
-function initGoogleAuth(){
-  if(typeof google === 'undefined') return;
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: GCAL_CLIENT_ID,
-    scope: GCAL_SCOPE,
-    callback: (resp) => {
-      if(resp.error) return;
-      gcalAccessToken = resp.access_token;
-    }
-  });
-}
-
-async function getGcalToken(){
-  return new Promise((resolve)=>{
-    if(gcalAccessToken){ resolve(gcalAccessToken); return; }
-    tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: GCAL_CLIENT_ID,
-      scope: GCAL_SCOPE,
-      callback: (resp) => {
-        if(resp.error){ resolve(null); return; }
-        gcalAccessToken = resp.access_token;
-        resolve(gcalAccessToken);
-      }
-    });
-    tokenClient.requestAccessToken({prompt:'consent'});
-  });
-}
-
-async function criarEventoCalendar(dados){
-  if(!selectedDay || !selectedTime) return null;
-  try{
-    const token = await getGcalToken();
-    if(!token) return null;
-
-    // Monta data/hora do evento
-    const [hora, minuto] = selectedTime.split(':');
-    const dataStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay).padStart(2,'0')}`;
-    const inicio = `${dataStr}T${hora}:${minuto}:00-03:00`;
-    const fimHora = String(parseInt(hora)+1).padStart(2,'0');
-    const fim = `${dataStr}T${fimHora}:${minuto}:00-03:00`;
-
-    const evento = {
-      summary: `Consulta Pré-Anestésica — ${dados.nome||'Paciente'}`,
-      description: `Paciente: ${dados.nome||''}\nCPF: ${dados.cpf||''}\nTelefone: ${dados.telefone||''}\nCirurgia: ${dados.cirurgia||''}\nConvênio: ${dados.operadora||''}\n\nAvaliação pré-anestésica — Lagos Anestesia`,
-      start: { dateTime: inicio, timeZone: 'America/Sao_Paulo' },
-      end: { dateTime: fim, timeZone: 'America/Sao_Paulo' },
-      conferenceData: {
-        createRequest: {
-          requestId: `lagos-${Date.now()}`,
-          conferenceSolutionKey: { type: 'hangoutsMeet' }
-        }
-      },
-      attendees: dados.email ? [{ email: dados.email }] : [],
-      reminders: {
-        useDefault: false,
-        overrides: [
-          { method: 'email', minutes: 24*60 },
-          { method: 'popup', minutes: 30 }
-        ]
-      }
-    };
-
-    const resp = await fetch(
-      'https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=all',
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(evento)
-      }
-    );
-    const result = await resp.json();
-    return result.hangoutLink || result.htmlLink || null;
-  } catch(e){
-    console.warn('Erro ao criar evento no Google Calendar:', e);
-    return null;
-  }
-}
-
 // ─── Finalizar + gravar Firebase ─────────────────────────
 window.finalizarAvaliacao = async function(){
   goTo(7);
@@ -1487,11 +1399,7 @@ window.gerarTermoPDF = function(){
 // ─── Init ───────────────────────────────────────────────
 renderCal();
 window.addEventListener('load', ()=>{
-  setTimeout(initGoogleAuth, 1500);
-  // Verifica se deve abrir painel admin
-  if(window.location.hash === '#admin'){
-    abrirAdmin();
-  }
+  if(window.location.hash === '#admin') abrirAdmin();
 });
 window.addEventListener('hashchange', ()=>{
   if(window.location.hash === '#admin') abrirAdmin();
