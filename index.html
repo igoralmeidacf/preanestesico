@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async></script>
 <style>
   :root {
     --blue:#3288C5; --blue-light:#E8F1FB; --blue-mid:#3478C8;
@@ -547,9 +548,75 @@
       </div>
     </div>
   </div>
+<!-- PAINEL ADMIN -->
+<div id="admin-overlay" style="display:none;position:fixed;inset:0;background:#f4f5f7;z-index:1000;overflow-y:auto;">
+
+  <!-- Login admin -->
+  <div id="admin-login" style="max-width:380px;margin:4rem auto;padding:1.5rem;">
+    <div style="text-align:center;margin-bottom:2rem;">
+      <div style="width:48px;height:48px;background:#3288C5;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+        <i class="ti ti-lock" style="color:#fff;font-size:24px;"></i>
+      </div>
+      <div style="font-size:18px;font-weight:600;color:#1a1a2e;">Painel do Dr. Igor</div>
+      <div style="font-size:13px;color:#6b7280;margin-top:4px;">Lagos Anestesia</div>
+    </div>
+    <div style="background:#fff;border-radius:14px;padding:1.5rem;border:1px solid #e8eaf0;">
+      <label style="font-size:12px;font-weight:500;color:#6b7280;display:block;margin-bottom:6px;">Senha de acesso</label>
+      <input type="password" id="admin-senha" placeholder="Digite a senha" style="width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:10px;font-size:14px;margin-bottom:12px;" onkeydown="if(event.key==='Enter') adminLogin()">
+      <button onclick="adminLogin()" style="width:100%;padding:12px;background:#3288C5;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">Entrar</button>
+      <div id="admin-erro" style="display:none;color:#B83030;font-size:13px;margin-top:8px;text-align:center;">Senha incorreta.</div>
+    </div>
+    <div style="text-align:center;margin-top:1rem;">
+      <span onclick="fecharAdmin()" style="font-size:13px;color:#6b7280;cursor:pointer;">← Voltar ao portal</span>
+    </div>
+  </div>
+
+  <!-- Painel principal -->
+  <div id="admin-painel" style="display:none;max-width:700px;margin:0 auto;padding:1rem 1rem 3rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 0 1rem;border-bottom:1px solid #e8eaf0;margin-bottom:1rem;">
+      <div>
+        <div style="font-size:16px;font-weight:600;color:#1a1a2e;">Painel — Dr. Igor</div>
+        <div style="font-size:12px;color:#6b7280;">Pacientes agendados</div>
+      </div>
+      <span onclick="fecharAdmin()" style="font-size:13px;color:#6b7280;cursor:pointer;padding:6px 12px;border:1px solid #e8eaf0;border-radius:8px;">Sair</span>
+    </div>
+
+    <!-- Filtro -->
+    <div style="display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;">
+      <button onclick="filtrarAdmin('hoje')" id="filtro-hoje" class="filtro-btn filtro-ativo">Hoje</button>
+      <button onclick="filtrarAdmin('semana')" id="filtro-semana" class="filtro-btn">Esta semana</button>
+      <button onclick="filtrarAdmin('todos')" id="filtro-todos" class="filtro-btn">Todos</button>
+      <input type="text" id="admin-busca" placeholder="Buscar por nome..." oninput="buscarAdmin(this.value)"
+        style="flex:1;min-width:140px;padding:7px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;">
+    </div>
+
+    <div id="admin-loading" style="text-align:center;padding:2rem;color:#6b7280;font-size:14px;">
+      <i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite;display:inline-block;"></i> Carregando pacientes...
+    </div>
+    <div id="admin-lista"></div>
+    <div id="admin-vazio" style="display:none;text-align:center;padding:3rem;color:#9ca3af;">
+      <i class="ti ti-calendar-off" style="font-size:36px;display:block;margin-bottom:0.5rem;"></i>
+      Nenhum paciente encontrado.
+    </div>
+  </div>
 </div>
 
-<script type="module">
+<style>
+.filtro-btn{padding:6px 14px;border:1px solid #e8eaf0;border-radius:8px;font-size:13px;cursor:pointer;background:#fff;color:#374151;font-family:inherit;}
+.filtro-btn:hover{background:#eff6ff;border-color:#3288C5;}
+.filtro-ativo{background:#3288C5!important;color:#fff!important;border-color:#3288C5!important;}
+.paciente-card{background:#fff;border:1px solid #e8eaf0;border-radius:12px;padding:1rem;margin-bottom:0.75rem;}
+.paciente-card:hover{border-color:#3288C5;}
+.pac-nome{font-size:15px;font-weight:600;color:#1a1a2e;}
+.pac-info{font-size:12px;color:#6b7280;margin-top:3px;}
+.pac-badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;margin-right:4px;}
+.pac-pendente{background:#fef3c7;color:#92400e;}
+.pac-concluido{background:#d1fae5;color:#065f46;}
+.btn-ver-pdf{padding:7px 14px;background:#3288C5;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;}
+.btn-ver-pdf:hover{background:#256a9c;}
+.btn-concluir{padding:7px 14px;background:#fff;color:#374151;border:1px solid #d1d5db;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;}
+.btn-concluir:hover{background:#f9fafb;}
+</style>
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
@@ -565,6 +632,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
+window.db = db; // expõe para o painel admin
 
 // ─── estado global ───────────────────────────────────────
 let currentStep=0, selectedDay=null, selectedTime=null, calYear, calMonth;
@@ -849,14 +917,114 @@ function renderScores(){
     </div>`;
 }
 
-// ─── Finalizar + gravar Firebase ─────────────────────────
+// ─── Google Calendar OAuth2 ───────────────────────────────
+const GCAL_CLIENT_ID = '194425181801-qjp31tifsa62ab5n02vp28cu46ejn17b.apps.googleusercontent.com';
+const GCAL_SCOPE = 'https://www.googleapis.com/auth/calendar.events';
+let tokenClient = null;
+let gcalAccessToken = null;
+
+function initGoogleAuth(){
+  if(typeof google === 'undefined') return;
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GCAL_CLIENT_ID,
+    scope: GCAL_SCOPE,
+    callback: (resp) => {
+      if(resp.error) return;
+      gcalAccessToken = resp.access_token;
+    }
+  });
+}
+
+async function getGcalToken(){
+  return new Promise((resolve)=>{
+    if(gcalAccessToken){ resolve(gcalAccessToken); return; }
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GCAL_CLIENT_ID,
+      scope: GCAL_SCOPE,
+      callback: (resp) => {
+        if(resp.error){ resolve(null); return; }
+        gcalAccessToken = resp.access_token;
+        resolve(gcalAccessToken);
+      }
+    });
+    tokenClient.requestAccessToken({prompt:'consent'});
+  });
+}
+
+async function criarEventoCalendar(dados){
+  if(!selectedDay || !selectedTime) return null;
+  try{
+    const token = await getGcalToken();
+    if(!token) return null;
+
+    // Monta data/hora do evento
+    const [hora, minuto] = selectedTime.split(':');
+    const dataStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(selectedDay).padStart(2,'0')}`;
+    const inicio = `${dataStr}T${hora}:${minuto}:00-03:00`;
+    const fimHora = String(parseInt(hora)+1).padStart(2,'0');
+    const fim = `${dataStr}T${fimHora}:${minuto}:00-03:00`;
+
+    const evento = {
+      summary: `Consulta Pré-Anestésica — ${dados.nome||'Paciente'}`,
+      description: `Paciente: ${dados.nome||''}\nCPF: ${dados.cpf||''}\nTelefone: ${dados.telefone||''}\nCirurgia: ${dados.cirurgia||''}\nConvênio: ${dados.operadora||''}\n\nAvaliação pré-anestésica — Lagos Anestesia`,
+      start: { dateTime: inicio, timeZone: 'America/Sao_Paulo' },
+      end: { dateTime: fim, timeZone: 'America/Sao_Paulo' },
+      conferenceData: {
+        createRequest: {
+          requestId: `lagos-${Date.now()}`,
+          conferenceSolutionKey: { type: 'hangoutsMeet' }
+        }
+      },
+      attendees: dados.email ? [{ email: dados.email }] : [],
+      reminders: {
+        useDefault: false,
+        overrides: [
+          { method: 'email', minutes: 24*60 },
+          { method: 'popup', minutes: 30 }
+        ]
+      }
+    };
+
+    const resp = await fetch(
+      'https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1&sendUpdates=all',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(evento)
+      }
+    );
+    const result = await resp.json();
+    return result.hangoutLink || result.htmlLink || null;
+  } catch(e){
+    console.warn('Erro ao criar evento no Google Calendar:', e);
+    return null;
+  }
+}
+
+// ─── Finalizar + gravar Firebase + Google Calendar ────────
 window.finalizarAvaliacao = async function(){
   goTo(7);
   mostrarEstado("saving");
   const dados = coletarDados();
   try{
+    // Tenta criar evento no Google Calendar
+    const meetLink = await criarEventoCalendar(dados);
+    if(meetLink) dados.meetLink = meetLink;
+
     await uploadEGravar(dados);
     mostrarEstado("success");
+
+    // Mostra link do Meet se criado
+    if(meetLink){
+      const infoBox = document.querySelector('#stateSuccess .info-box');
+      if(infoBox){
+        infoBox.innerHTML = `<i class="ti ti-video"></i>
+          <span>Consulta agendada! <a href="${meetLink}" target="_blank" style="color:var(--blue);font-weight:600;">Clique aqui para acessar o Google Meet</a> na data/hora marcada.</span>`;
+      }
+    }
   }catch(err){
     document.getElementById("errorMsg").textContent=err.message||"Verifique sua conexão.";
     mostrarEstado("error");
@@ -1330,6 +1498,269 @@ window.gerarTermoPDF = function(){
 
 // ─── Init ───────────────────────────────────────────────
 renderCal();
+window.addEventListener('load', ()=>{
+  setTimeout(initGoogleAuth, 1500);
+  // Verifica se deve abrir painel admin
+  if(window.location.hash === '#admin'){
+    abrirAdmin();
+  }
+});
+window.addEventListener('hashchange', ()=>{
+  if(window.location.hash === '#admin') abrirAdmin();
+  else fecharAdmin();
+});
+
+// ─── PAINEL ADMIN ────────────────────────────────────────
+const ADMIN_SENHA = 'teste123';
+let todosOsPacientes = [];
+let filtroAtual = 'hoje';
+
+window.abrirAdmin = function(){
+  document.getElementById('admin-overlay').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+};
+
+window.fecharAdmin = function(){
+  document.getElementById('admin-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+  if(window.location.hash === '#admin'){
+    history.pushState('', document.title, window.location.pathname);
+  }
+};
+
+window.adminLogin = async function(){
+  const senha = document.getElementById('admin-senha').value;
+  const erro = document.getElementById('admin-erro');
+  if(senha !== ADMIN_SENHA){
+    erro.style.display = 'block';
+    return;
+  }
+  erro.style.display = 'none';
+  document.getElementById('admin-login').style.display = 'none';
+  document.getElementById('admin-painel').style.display = 'block';
+  await carregarPacientes();
+};
+
+async function carregarPacientes(){
+  document.getElementById('admin-loading').style.display = 'block';
+  document.getElementById('admin-lista').innerHTML = '';
+  document.getElementById('admin-vazio').style.display = 'none';
+  try{
+    const {getDocs, collection:col, orderBy, query} = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+    const q = query(col(db, 'pacientes'), orderBy('criadoEm', 'desc'));
+    const snap = await getDocs(q);
+    todosOsPacientes = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    document.getElementById('admin-loading').style.display = 'none';
+    filtrarAdmin(filtroAtual);
+  }catch(e){
+    document.getElementById('admin-loading').innerHTML = '<span style="color:#B83030;">Erro ao carregar. Tente novamente.</span>';
+  }
+}
+
+window.filtrarAdmin = function(filtro){
+  filtroAtual = filtro;
+  document.querySelectorAll('.filtro-btn').forEach(b=>b.classList.remove('filtro-ativo'));
+  document.getElementById('filtro-'+filtro)?.classList.add('filtro-ativo');
+  const busca = document.getElementById('admin-busca').value.toLowerCase();
+  const hoje = new Date();
+  const hojeStr = hoje.toLocaleDateString('pt-BR');
+
+  let lista = todosOsPacientes.filter(p=>{
+    if(busca && !(p.nome||'').toLowerCase().includes(busca)) return false;
+    if(filtro === 'hoje'){
+      const dataConsulta = p.dataConsulta || '';
+      return dataConsulta.includes(hojeStr.split('/')[0]+' de');
+    }
+    if(filtro === 'semana'){
+      const criado = p.criadoEm?.toDate ? p.criadoEm.toDate() : new Date(p.criadoEm||0);
+      const diff = (hoje - criado)/(1000*60*60*24);
+      return diff <= 7;
+    }
+    return true;
+  });
+
+  renderListaAdmin(lista);
+};
+
+window.buscarAdmin = function(val){
+  filtrarAdmin(filtroAtual);
+};
+
+function renderListaAdmin(lista){
+  const el = document.getElementById('admin-lista');
+  const vazio = document.getElementById('admin-vazio');
+  if(!lista.length){
+    el.innerHTML = '';
+    vazio.style.display = 'block';
+    return;
+  }
+  vazio.style.display = 'none';
+  el.innerHTML = lista.map(p=>{
+    const nome = p.nome || 'Sem nome';
+    const cirurgia = p.cirurgia || '—';
+    const convenio = p.operadora || '—';
+    const consulta = p.dataConsulta ? `${p.dataConsulta} às ${p.horarioConsulta||'—'}` : 'Não agendado';
+    const status = p.status || 'pendente';
+    const criado = p.criadoEm?.toDate ? p.criadoEm.toDate().toLocaleDateString('pt-BR') : '—';
+    return `
+      <div class="paciente-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <div class="pac-nome">${nome}</div>
+            <div class="pac-info"><i class="ti ti-calendar"></i> ${consulta}</div>
+            <div class="pac-info"><i class="ti ti-activity"></i> ${cirurgia} &nbsp;·&nbsp; <i class="ti ti-building-hospital"></i> ${convenio}</div>
+            <div class="pac-info" style="margin-top:4px;">
+              <span class="pac-badge ${status==='concluido'?'pac-concluido':'pac-pendente'}">${status==='concluido'?'Concluído':'Pendente'}</span>
+              <span style="font-size:11px;color:#9ca3af;">Recebido em ${criado}</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+            <button class="btn-ver-pdf" onclick="gerarPDFAdmin('${p.id}')">
+              <i class="ti ti-file-text"></i> PDF
+            </button>
+            <button class="btn-concluir" onclick="marcarConcluido('${p.id}',this)">
+              ${status==='concluido'?'Reabrir':'✓ Concluído'}
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+window.marcarConcluido = async function(id, btn){
+  try{
+    const {doc, updateDoc} = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+    const p = todosOsPacientes.find(x=>x.id===id);
+    const novoStatus = p.status === 'concluido' ? 'pendente' : 'concluido';
+    await updateDoc(doc(db,'pacientes',id), {status: novoStatus});
+    p.status = novoStatus;
+    filtrarAdmin(filtroAtual);
+  }catch(e){ alert('Erro ao atualizar status.'); }
+};
+
+window.gerarPDFAdmin = async function(id){
+  const p = todosOsPacientes.find(x=>x.id===id);
+  if(!p){ alert('Paciente não encontrado.'); return; }
+
+  const {jsPDF} = window.jspdf;
+  const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210, M=14, COL=W/2-M-3;
+  let y=22;
+
+  // Cabeçalho
+  pdf.setFillColor(50,136,197);
+  pdf.rect(0,0,W,16,'F');
+  pdf.setFontSize(13);pdf.setFont(undefined,'bold');pdf.setTextColor(255,255,255);
+  pdf.text('Avaliação Pré-Anestésica — Lagos Anestesia',M,10);
+  pdf.setFontSize(8.5);pdf.setFont(undefined,'normal');
+  pdf.text('Hospital Santa Helena · Dr. Igor Souza de Almeida · CRM 52-81634-5',M,15);
+
+  // Resumo
+  pdf.setFillColor(245,248,252);
+  pdf.roundedRect(M,y-4,W-2*M,18,3,3,'F');
+  pdf.setFontSize(8);pdf.setFont(undefined,'bold');pdf.setTextColor(50,136,197);
+  pdf.text('RESUMO CLÍNICO',M+3,y);y+=5;
+  const resumo = p.resumo_inteligente || `${p.nome||'Paciente'} — ${p.cirurgia||'procedimento não informado'} — ${p.operadora||'convênio não informado'}.`;
+  const resumoLines = pdf.splitTextToSize(resumo, W-2*M-6);
+  pdf.setFontSize(9);pdf.setFont(undefined,'normal');pdf.setTextColor(26,29,35);
+  pdf.text(resumoLines,M+3,y);
+  y += resumoLines.length*4.5+8;
+
+  // Colunas
+  const col=(titulo,items,xOff)=>{
+    const xB=M+xOff;
+    pdf.setFillColor(232,241,251);
+    pdf.roundedRect(xB,y-3,COL+2,7,2,2,'F');
+    pdf.setFontSize(8);pdf.setFont(undefined,'bold');pdf.setTextColor(50,136,197);
+    pdf.text(titulo,xB+2,y+2);
+    pdf.setTextColor(26,29,35);
+    let ly=y+9;
+    items.forEach(([label,val])=>{
+      if(!val) return;
+      pdf.setFontSize(7.5);pdf.setFont(undefined,'bold');pdf.setTextColor(90,96,114);
+      pdf.text(label,xB+2,ly);
+      pdf.setFont(undefined,'normal');pdf.setTextColor(26,29,35);
+      const lines=pdf.splitTextToSize(String(val),COL-4);
+      pdf.text(lines,xB+2,ly+4);
+      ly+=4+lines.length*4;
+    });
+    return ly;
+  };
+
+  const id2 = p.identificacao||{}, ant = p.antropometria||{}, hist = p.historico_clinico||{}, ve = p.via_aerea_escores||{}, tel = p.teleconsulta||{};
+  const nome = p.nome || id2.nome || '—';
+
+  const y1L=col('IDENTIFICAÇÃO',[
+    ['Nome',nome],['CPF',p.cpf||id2.cpf],
+    ['Nascimento',p.dataNasc||id2.data_nascimento],
+    ['Telefone',p.telefone||id2.telefone],
+    ['Operadora',p.operadora||id2.operadora]
+  ],0);
+  const y1R=col('PROCEDIMENTO',[
+    ['Hospital',p.hospital||id2.hospital_clinica],
+    ['Cirurgia',p.cirurgia||id2.cirurgia],
+    ['Cirurgião',p.cirurgiao||id2.cirurgiao],
+    ['Diagnóstico',p.diagnostico||id2.diagnostico],
+    ['Teleconsulta',tel.data_consulta?`${tel.data_consulta} às ${tel.horario_consulta||'—'}`:p.dataConsulta?`${p.dataConsulta} às ${p.horarioConsulta||'—'}`:null]
+  ],COL+6);
+  y=Math.max(y1L,y1R)+6;
+
+  const cardio = (hist.cardiovascular||[]).map(x=>x.texto||x).filter(t=>t&&!t.includes('Sem ')).join(', ');
+  const alerg = [(hist.alergias||[]).map(x=>x.texto||x).filter(t=>t&&!t.includes('Não')).join(', '), hist.alergias_descricao].filter(Boolean).join(' — ');
+  const meds = hist.medicamentos_em_uso || p.medicamentos;
+
+  const y2L=col('HISTÓRICO CLÍNICO',[
+    ['Cardiovascular',cardio||'Sem alterações'],
+    ['Alergias',alerg||'Nega alergias'],
+    ['Via aérea difícil',ve.via_aerea_dificil_previa==='sim'?'Sim':'Não'],
+    ['Medicamentos',meds||'Nenhum'],
+  ],0);
+  const y2R=col('ESCORES DE RISCO',[
+    ['Lee/RCRI',ve.lee_rcri?`${ve.lee_rcri.score} — ${ve.lee_rcri.classificacao}`:p.lee!=null?`${p.lee}`:null],
+    ['Apfel',ve.apfel_nvpo?`${ve.apfel_nvpo.score} — ${ve.apfel_nvpo.risco}`:p.apfel!=null?`${p.apfel}`:null],
+    ['Classe ASA',ve.asa?`${ve.asa.score} — ${ve.asa.classificacao}`:p.asa!=null?`${p.asa}`:null],
+    ['METs',ve.capacidade_funcional_mets?.faixa||p.mets],
+    ['Fragilidade',ve.fragilidade_clinica?'Grau '+ve.fragilidade_clinica:p.fragilidade?'Grau '+p.fragilidade:null],
+    ['Consentimento',p.aceite||p.consentimento?.aceite?'Aceito':'Não registrado'],
+  ],COL+6);
+  y=Math.max(y2L,y2R)+6;
+
+  // Rodapé
+  pdf.setFontSize(7.5);pdf.setTextColor(154,160,174);
+  pdf.text(`Gerado em: ${new Date().toLocaleString('pt-BR')} · Portal Pré-Anestésico Lagos Anestesia`,M,291);
+
+  // Fotos dos exames se disponíveis via URL do Firebase
+  const uploads = p.uploads_exames || p.uploads || {};
+  const todasUrls = [
+    ...(uploads.laboratoriais||uploads.lab||[]).map(u=>({...u,cat:'Exames Laboratoriais'})),
+    ...(uploads.ecg||[]).map(u=>({...u,cat:'ECG'})),
+    ...(uploads.outros||[]).map(u=>({...u,cat:'Outros Exames'})),
+  ].filter(u=>u.url);
+
+  for(const img of todasUrls){
+    try{
+      const resp = await fetch(img.url);
+      const blob = await resp.blob();
+      const dataUrl = await new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(blob);});
+      pdf.addPage();
+      pdf.setFillColor(50,136,197);pdf.rect(0,0,W,14,'F');
+      pdf.setFontSize(11);pdf.setFont(undefined,'bold');pdf.setTextColor(255,255,255);
+      pdf.text(img.cat,M,10);
+      pdf.setFontSize(8.5);pdf.setFont(undefined,'normal');
+      pdf.text(img.nome||'',M+80,10);
+      const imgEl=new Image();
+      await new Promise(res=>{imgEl.onload=res;imgEl.src=dataUrl;});
+      const iw=imgEl.naturalWidth,ih=imgEl.naturalHeight;
+      const scale=Math.min((W-2*M)/iw,268/ih);
+      pdf.addImage(dataUrl,'JPEG',(W-iw*scale)/2,18,iw*scale,ih*scale);
+      pdf.setFontSize(7.5);pdf.setTextColor(154,160,174);
+      pdf.text(`Paciente: ${nome}`,M,292);
+    }catch(e){}
+  }
+
+  const nomeSafe=(nome||'paciente').replace(/[^a-zA-Z0-9]/g,'_').substring(0,30);
+  pdf.save(`PreAnestesico_${nomeSafe}_${new Date().toISOString().split('T')[0]}.pdf`);
+};
 function calcLeeGlobal(){return calcLee();}
 </script>
 </body>
