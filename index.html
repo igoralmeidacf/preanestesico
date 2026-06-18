@@ -1005,27 +1005,14 @@ async function criarEventoCalendar(dados){
   }
 }
 
-// ─── Finalizar + gravar Firebase + Google Calendar ────────
+// ─── Finalizar + gravar Firebase ─────────────────────────
 window.finalizarAvaliacao = async function(){
   goTo(7);
   mostrarEstado("saving");
   const dados = coletarDados();
   try{
-    // Tenta criar evento no Google Calendar
-    const meetLink = await criarEventoCalendar(dados);
-    if(meetLink) dados.meetLink = meetLink;
-
     await uploadEGravar(dados);
     mostrarEstado("success");
-
-    // Mostra link do Meet se criado
-    if(meetLink){
-      const infoBox = document.querySelector('#stateSuccess .info-box');
-      if(infoBox){
-        infoBox.innerHTML = `<i class="ti ti-video"></i>
-          <span>Consulta agendada! <a href="${meetLink}" target="_blank" style="color:var(--blue);font-weight:600;">Clique aqui para acessar o Google Meet</a> na data/hora marcada.</span>`;
-      }
-    }
   }catch(err){
     document.getElementById("errorMsg").textContent=err.message||"Verifique sua conexão.";
     mostrarEstado("error");
