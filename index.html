@@ -501,13 +501,13 @@
       <div class="step-title" style="margin-bottom:8px;">Avaliação enviada com sucesso!</div>
       <p style="font-size:14px;color:var(--text-2);margin-bottom:1.5rem;max-width:320px;margin-left:auto;margin-right:auto;line-height:1.6;">O Dr. Igor revisará suas informações antes da teleconsulta. Você receberá a confirmação pelo WhatsApp.</p>
       <div style="display:flex;flex-direction:column;gap:10px;max-width:360px;margin:0 auto;">
-        <button class="btn-next" style="background:var(--blue);" onclick="gerarPDFCompleto()">
+        <button class="btn-next" style="background:var(--blue);" id="btnPdfAvaliacao" onclick="baixarComFeedback('btnPdfAvaliacao','gerarPDFCompleto','Baixar avaliação pré-anestésica (PDF)')">
           <i class="ti ti-file-text"></i> Baixar avaliação pré-anestésica (PDF)
         </button>
-        <button class="btn-next" style="background:var(--green);" onclick="gerarEbook()">
+        <button class="btn-next" style="background:var(--green);" id="btnEbook" onclick="baixarComFeedback('btnEbook','gerarEbook','Baixar ebook — Orientações pré-cirúrgicas')">
           <i class="ti ti-book"></i> Baixar ebook — Orientações pré-cirúrgicas
         </button>
-        <button class="btn-next" style="background:#5F5E5A;" onclick="gerarTermoPDF()">
+        <button class="btn-next" style="background:#5F5E5A;" id="btnTermo" onclick="baixarComFeedback('btnTermo','gerarTermoPDF','Baixar termo de consentimento assinado')">
           <i class="ti ti-file-certificate"></i> Baixar termo de consentimento assinado
         </button>
       </div>
@@ -698,25 +698,41 @@ window.checkMedAlerts = function(val){
 };
 
 // ─── Upload — converte para base64 e mostra thumbs ───────
-function fileToJpegBase64(file){
-  return new Promise((resolve)=>{
-    const url=URL.createObjectURL(file);
-    const img=new Image();
-    img.onload=()=>{
-      const MAX=1400;
-      let w=img.width,h=img.height;
+async function fileToJpegBase64(file){
+  const MAX=1400;
+  try{
+    // Tenta createImageBitmap primeiro (melhor suporte HEIC no iOS Safari)
+    let bitmap;
+    try{ bitmap=await createImageBitmap(file); }
+    catch(e){ bitmap=null; }
+    if(bitmap){
+      let w=bitmap.width, h=bitmap.height;
       if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
       if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
       const canvas=document.createElement("canvas");
-      canvas.width=w;canvas.height=h;
-      canvas.getContext("2d").drawImage(img,0,0,w,h);
-      const dataUrl=canvas.toDataURL("image/jpeg",0.82);
-      URL.revokeObjectURL(url);
-      resolve(dataUrl);
-    };
-    img.onerror=()=>{URL.revokeObjectURL(url);resolve(null);};
-    img.src=url;
-  });
+      canvas.width=w; canvas.height=h;
+      canvas.getContext("2d").drawImage(bitmap,0,0,w,h);
+      bitmap.close();
+      return canvas.toDataURL("image/jpeg",0.82);
+    }
+    // Fallback: URL.createObjectURL + Image
+    return await new Promise((resolve)=>{
+      const url=URL.createObjectURL(file);
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}
+        if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}
+        const canvas=document.createElement("canvas");
+        canvas.width=w;canvas.height=h;
+        canvas.getContext("2d").drawImage(img,0,0,w,h);
+        URL.revokeObjectURL(url);
+        resolve(canvas.toDataURL("image/jpeg",0.82));
+      };
+      img.onerror=()=>{URL.revokeObjectURL(url);resolve(null);};
+      img.src=url;
+    });
+  }catch(e){ return null; }
 }
 
 window.handleUpload = async function(inputId, previewId, thumbsId){
@@ -726,8 +742,8 @@ window.handleUpload = async function(inputId, previewId, thumbsId){
   const thumbsEl=document.getElementById(thumbsId);
   const categoria=inputId==="labFile"?"lab":inputId==="ecgFile"?"ecg":"outros";
   uploadedImages[categoria]=[];
-  preview.innerHTML=`<div class="upload-ok"><i class="ti ti-circle-check"></i> Processando ${files.length} arquivo(s)...</div>`;
   thumbsEl.innerHTML="";
+  preview.innerHTML=`<div class="upload-ok"><i class="ti ti-loader-2"></i> Processando ${files.length} arquivo(s)... aguarde.</div>`;
 
   for(const file of Array.from(files)){
     if(file.type.startsWith("image/")||file.name.toLowerCase().match(/\.(jpg|jpeg|png|heic|heif|webp)$/)){
@@ -743,11 +759,12 @@ window.handleUpload = async function(inputId, previewId, thumbsId){
     } else {
       uploadedImages[categoria].push({name:file.name,data:null,isPdf:true});
     }
-    preview.innerHTML=`<div class="upload-ok"><i class="ti ti-circle-check"></i> ${uploadedImages[categoria].length} arquivo(s) prontos para o PDF.</div>`;
-    Array.from(files).forEach(f=>{
-      preview.innerHTML+=`<div class="file-preview"><i class="ti ti-file-check"></i> ${f.name}</div>`;
-    });
   }
+  const total=uploadedImages[categoria].filter(i=>i.data).length;
+  preview.innerHTML=`<div class="upload-ok"><i class="ti ti-circle-check"></i> ${total} imagem(ns) processada(s) e pronta(s) para o PDF.</div>`;
+  Array.from(files).forEach(f=>{
+    preview.innerHTML+=`<div class="file-preview"><i class="ti ti-file-check"></i> ${f.name}</div>`;
+  });
 };
 
 // ─── Calendário ──────────────────────────────────────────
@@ -895,6 +912,22 @@ async function uploadEGravar(dados){
   dados.uploads=uploads;
   await addDoc(collection(db,"pacientes"),dados);
 }
+
+// ─── Wrapper para download com feedback visual ────────────
+window.baixarComFeedback = async function(btnId, fnName, labelOriginal){
+  const btn=document.getElementById(btnId);
+  const originalHtml=btn.innerHTML;
+  btn.disabled=true;
+  btn.innerHTML=`<i class="ti ti-loader-2" style="animation:spin 0.7s linear infinite;display:inline-block;"></i> Gerando PDF...`;
+  try{
+    await window[fnName]();
+    btn.innerHTML=`<i class="ti ti-check"></i> Baixado!`;
+    setTimeout(()=>{btn.innerHTML=originalHtml;btn.disabled=false;},3000);
+  }catch(e){
+    btn.innerHTML=`<i class="ti ti-alert-triangle"></i> Erro — tente novamente`;
+    setTimeout(()=>{btn.innerHTML=originalHtml;btn.disabled=false;},3000);
+  }
+};
 
 // ─── PDF AVALIAÇÃO — layout melhorado ────────────────────
 window.gerarPDFCompleto = async function(){
