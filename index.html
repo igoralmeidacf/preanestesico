@@ -925,6 +925,18 @@ window.finalizarAvaliacao = async function(){
   try{
     await uploadEGravar(dados);
     mostrarEstado("success");
+
+    // Aviso visível se fotos não foram salvas corretamente
+    if(dados.debug_total_fotos>0 && dados.debug_fotos_enviadas < dados.debug_total_fotos){
+      const infoBox = document.querySelector('#stateSuccess .info-box');
+      if(infoBox){
+        infoBox.style.background = '#fef3c7';
+        infoBox.style.borderColor = '#fcd34d';
+        infoBox.style.color = '#92400e';
+        infoBox.innerHTML = `<i class="ti ti-alert-triangle"></i>
+          <span><strong>Atenção:</strong> ${dados.debug_fotos_enviadas} de ${dados.debug_total_fotos} foto(s) foram salvas com sucesso. Se alguma não salvou, tente reenviar ou avise nossa equipe.</span>`;
+      }
+    }
   }catch(err){
     document.getElementById("errorMsg").textContent=err.message||"Verifique sua conexão.";
     mostrarEstado("error");
@@ -977,9 +989,16 @@ async function uploadEGravar(dados){
   const cpf=(dados.cpf||"sem_cpf").replace(/\D/g,"")||"sem_cpf";
   const pasta=`avaliacoes/${cpf}/${Date.now()}`;
   const uploads={lab:[],ecg:[],outros:[]};
+  const errosUpload=[];
+  let totalFotos=0;
+
   for(const [cat,imgs] of Object.entries(uploadedImages)){
     for(const img of imgs){
-      if(!img.data) continue;
+      totalFotos++;
+      if(!img.data){
+        errosUpload.push(`${img.name||'foto'}: sem dados (data ausente)`);
+        continue;
+      }
       try{
         const blob = dataUrlToBlob(img.data);
         const nomeArquivo = (img.name||'foto.jpg').replace(/[^a-zA-Z0-9._-]/g,"_");
@@ -988,12 +1007,23 @@ async function uploadEGravar(dados){
         const url=await getDownloadURL(snap.ref);
         uploads[cat].push({nome:img.name,url,tipo:blob.type});
       }catch(e){
-        console.warn('Erro ao enviar imagem', img.name, e);
+        console.error('ERRO UPLOAD:', img.name, e.code||e.message||e);
+        errosUpload.push(`${img.name||'foto'}: ${e.code||e.message||'erro desconhecido'}`);
       }
     }
   }
+
   dados.uploads=uploads;
+  dados.debug_total_fotos=totalFotos;
+  dados.debug_fotos_enviadas=uploads.lab.length+uploads.ecg.length+uploads.outros.length;
+  if(errosUpload.length) dados.debug_erros_upload=errosUpload;
+
   await addDoc(collection(db,"pacientes"),dados);
+
+  // Se houve fotos mas nenhuma foi salva, avisa no console (visível via F12)
+  if(totalFotos>0 && dados.debug_fotos_enviadas===0){
+    console.error('ATENÇÃO: nenhuma das', totalFotos, 'fotos foi salva. Erros:', errosUpload);
+  }
 }
 
 // ─── Wrapper para download com feedback visual ────────────
