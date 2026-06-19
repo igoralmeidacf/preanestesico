@@ -1636,32 +1636,52 @@ window.gerarPDFAdmin = async function(id){
   pdf.text(`Gerado em: ${new Date().toLocaleString('pt-BR')} · Portal Pré-Anestésico Lagos Anestesia`,M,291);
 
   // Fotos dos exames se disponíveis via URL do Firebase
-  const uploads = p.uploads_exames || p.uploads || {};
+  const uploads = p.uploads || {};
   const todasUrls = [
-    ...(uploads.laboratoriais||uploads.lab||[]).map(u=>({...u,cat:'Exames Laboratoriais'})),
+    ...(uploads.lab||[]).map(u=>({...u,cat:'Exames Laboratoriais'})),
     ...(uploads.ecg||[]).map(u=>({...u,cat:'ECG'})),
     ...(uploads.outros||[]).map(u=>({...u,cat:'Outros Exames'})),
   ].filter(u=>u.url);
 
+  let erros = [];
   for(const img of todasUrls){
     try{
-      const resp = await fetch(img.url);
-      const blob = await resp.blob();
-      const dataUrl = await new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(blob);});
+      const dataUrl = await new Promise((resolve, reject)=>{
+        const imgEl = new Image();
+        imgEl.crossOrigin = 'anonymous';
+        imgEl.onload = ()=>{
+          const canvas = document.createElement('canvas');
+          canvas.width = imgEl.naturalWidth;
+          canvas.height = imgEl.naturalHeight;
+          canvas.getContext('2d').drawImage(imgEl,0,0);
+          try{
+            resolve(canvas.toDataURL('image/jpeg',0.85));
+          }catch(e){ reject(e); }
+        };
+        imgEl.onerror = (e)=>reject(new Error('Falha ao carregar imagem'));
+        imgEl.src = img.url;
+      });
+
       pdf.addPage();
       pdf.setFillColor(50,136,197);pdf.rect(0,0,W,14,'F');
       pdf.setFontSize(11);pdf.setFont(undefined,'bold');pdf.setTextColor(255,255,255);
       pdf.text(img.cat,M,10);
       pdf.setFontSize(8.5);pdf.setFont(undefined,'normal');
       pdf.text(img.nome||'',M+80,10);
-      const imgEl=new Image();
-      await new Promise(res=>{imgEl.onload=res;imgEl.src=dataUrl;});
-      const iw=imgEl.naturalWidth,ih=imgEl.naturalHeight;
+      const imgEl2=new Image();
+      await new Promise(res=>{imgEl2.onload=res;imgEl2.src=dataUrl;});
+      const iw=imgEl2.naturalWidth,ih=imgEl2.naturalHeight;
       const scale=Math.min((W-2*M)/iw,268/ih);
       pdf.addImage(dataUrl,'JPEG',(W-iw*scale)/2,18,iw*scale,ih*scale);
       pdf.setFontSize(7.5);pdf.setTextColor(154,160,174);
       pdf.text(`Paciente: ${nome}`,M,292);
-    }catch(e){}
+    }catch(e){
+      console.error('Erro ao carregar imagem do exame:', img.nome, e);
+      erros.push(img.nome||'arquivo');
+    }
+  }
+  if(erros.length){
+    console.warn('Imagens que falharam ao carregar no PDF:', erros);
   }
 
   const nomeSafe=(nome||'paciente').replace(/[^a-zA-Z0-9]/g,'_').substring(0,30);
